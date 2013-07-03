@@ -1,0 +1,13 @@
+application: danpresos
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+
+- url: /AppEngine101
+  static_dir: AppEngine101
+
+- url: /.*
+  script: danpresos.application
