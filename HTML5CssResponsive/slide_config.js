@@ -24,7 +24,7 @@ var SLIDE_CONFIG = {
   presenters: [{
     name: 'Daniel Acton',
     company: 'Google',
-    gplus: 'http://plus.ly/daniel.acton',
+    gplus: 'http://www.danielacton.com/+',
     twitter: '@danacton',
     www: 'http://www.danielacton.com',
     github: 'http://github.com/danacton'

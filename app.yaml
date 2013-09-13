@@ -15,5 +15,8 @@ handlers:
 - url: /namekeepr
   static_dir: namekeepr
 
+- url: /HTML5CssResponsive
+  static_dir: HTML5CssResponsive
+
 - url: /.*
   script: danpresos.application

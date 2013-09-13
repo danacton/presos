@@ -23,6 +23,7 @@ MAIN_PAGE_HTML = """\
       <li><a href="/namekeepr/index.html">namekeepr: an example application (Scaleconf April 2013, Google I/O Extended May 2013)</a></li>
       <li><a href="/AppEngine101/index.html">Google App Engine 101 (July 2013)</a></li>
       <li><a href="/AppEngine201/index.html">Google App Engine 201 (August 2013)</a></li>
+      <li><a href="/HTML5CssResponsive/index.html">Google Cloud Developer Challenge tutorial HTML5, CSS3 and Responsive DEsign(September 2013)</a></li>
   </body>
 </html>
 """
