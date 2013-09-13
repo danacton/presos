@@ -9,11 +9,20 @@ MAIN_PAGE_HTML = """\
 <html>
   <head>
     <title>Dan's presentations</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|Droid+Sans+Mono">
+    <style>
+      body {
+        font-family: 'Open Sans', Arial, sans-serif;
+        font-size: 12pt;
+      }
+    </style>
   </head>
   <body>
     <h1>Dan's presentations</h1>
     <ul>
-      <li><a href="/AppEngine101/index.html">Google App Engine 101</a></li>
+      <li><a href="/namekeepr/index.html">namekeepr: an example application (Scaleconf April 2013, Google I/O Extended May 2013)</a></li>
+      <li><a href="/AppEngine101/index.html">Google App Engine 101 (July 2013)</a></li>
+      <li><a href="/AppEngine201/index.html">Google App Engine 201 (August 2013)</a></li>
   </body>
 </html>
 """

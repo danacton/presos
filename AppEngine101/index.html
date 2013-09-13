@@ -9,7 +9,7 @@ URL: https://code.google.com/p/io-2012-slides
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title>Google App Engine 101</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
@@ -21,6 +21,11 @@ URL: https://code.google.com/p/io-2012-slides
   <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
   <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
   <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+  <style>
+    .italic {
+      font-style: italic;
+    }
+  </style>
 </head>
 <body style="opacity: 0">
 
@@ -96,149 +101,555 @@ URL: https://code.google.com/p/io-2012-slides
 
   <slide>
     <hgroup>
-      <h2>Some important concepts</h2>
+      <h2>Developing with App Engine</h2>
     </hgroup>
     <article>
-      <p>Datastore</p>
+      <p>Step 1: Get the Google App Engine SDK</p>
+      <ul>
+        <li>Provides libraries for APIs and utilities for deploying</li>
+      </ul>
+      <br/>
+      <p>Step 2: Write code</p>
+      <ul>
+        <li>Handling requests</li>
+        <li>Managing data</li>
+      </ul>
+      <br/>
+      <p>Step 3: Test locally</p>
+      <br/>
+      <p>Step 4: Deploy to App Engine</p>
+      <br/>
+      <p>Always remember: <a href="https://developers.google.com/appengine">developers.google.com/appengine</a></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Using Eclipse for App Engine projects</h2>
+    </hgroup>
+    <article>
+      <p>First</p>
+      <ul>
+        <li>Install Eclipse for Java</li>
+        <li>Install the Google Plugin for Eclipse (App Engine SDK Plugin)</li>
+        <li>Details at <a href="https://developers.google.com/appengine">https://developers.google.com/appengine</a> (Getting Started)</li>
+      </ul>
+      <p>Then</p>
+      <ul>
+        <li>Develop your web application</li>
+        <li>Run and test locally</li>
+        <li>Deploy to App Engine</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 1: Hello World</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Open Eclipse</li>
+        <li>Click <em class="italic">File</em> -&gt; <em class="italic">New</em> -&gt; <em class="italic">Other</em> -&gt; <em class="italic">Google</em> -&gt; <em class="italic">Web Application Project</em></li>
+        <li>Provide a name, package and select <em class="italic">"Generate project sample code"</em></li>
+        <li>Click  <em class="italic">Finish</em></li>
+        <li>Right-click your project -&gt;  <em class="italic">Run As</em> -&gt; <em class="italic">Web Application</em></li>
+        <li>Visit <a href="http://localhost:8888/" target="_blank">http://localhost:8888/</a> in your web browser</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 1: Hello World</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+        <img src="images/eclipse-new-project.png" height="500">
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Anatomy of a (Java) web application</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Project Root</li>
+        <li>
+          <ul>
+            <li><code>src/</code>
+              <ul>
+                <li>Source code goes here</li>
+              </ul>
+            </li>
+            <li><code>war/</code>
+              <ul>
+                <li>Static files go here</li>
+                <li><code>index.html</code></li>
+                <li><code>style/</code></li>
+                <li><code>js/</code></li>
+              </ul>
+              <ul>
+                <li><code>WEB-INF/</code>
+                  <ul>
+                    <li><code>web.xml</code> - Servlet configuration</li>
+                    <li><code>appengine-web.xml</code> - App Engine configuration</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Handling requests</h2>
+    </hgroup>
+    <article>
+      <p>Step 1: make sure your <code>web.xml</code> is updated</p>
+      <pre class="prettyprint" data-lang="xml">
+&lt;welcome-file-list&gt;
+  &lt;welcome-file&gt;index.html&lt;/welcome-file&gt;
+&lt;/welcome-file-list&gt;
+      </pre>
+      <p>Step 2: Define your servlet(s)</p>
+      <pre class="prettyprint" data-lang="xml">
+&lt;servlet&gt;
+  &lt;servlet-name&gt;Exercise2&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;com.samples.exercises.Exercise2Servlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Handling requests</h2>
+    </hgroup>
+    <article>
+      <p>Step 3: Map your servlet to a url</p>
+      <pre class="prettyprint" data-lang="xml">
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;Exercise2&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/exercise2&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+      </pre>
+      <p>Step 4: Write servlet code</p>
+      <pre class="prettyprint" data-lang="java">
+public class Exercise2Servlet extends HttpServlet {
+  public void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws IOException {
+    resp.setContentType("text/html");
+    resp.getWriter().println("&lt;p&gt;This is another servlet&lt;/p&gt;");
+  }
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 2: Adding a servlet</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Right-click your project -&gt;  <em class="italic">New</em> -&gt; <em class="italic">Class</em></li>
+        <li>Provide a package name and class name</li>
+        <li>Superclass is <code>javax.servlet.http.HttpServlet</code></li>
+        <li>Create <code>doGet(...)</code> method (or <code>doPost</code>, etc.)
+        <li>Add servlet to <code>web.xml</code></li>
+        <li>Map servlet to <code>/exercise2</code> in <code>web.xml</code></li>
+        <li>Run your web application</li>
+        <li>Visit <a href="http://localhost:8888/exercise2" target="_blank">http://localhost:8888/exercise2</a> in your web browser</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 2: Adding a servlet</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+        <img src="images/eclipse-new-servlet.png" height="500">
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Storing data with Datastore: Entities</h2>
+    </hgroup>
+    <article>
       <ul>
         <li>Schemaless NoSQL database</li>
         <li>Object/Entity persistence</li>
-        <li>Limited to 1MB per entity</li>
+        <li>Entity has <em class="italic">kind</em>, <em class="italic">identifier</em> and optional <em class="italic">ancestor path</em></li>
       </ul>
-      <p>Blobstore</p>
-      <ul>
-        <li>Store arbitrary data (e.g. images or files)</li>
-        <li>No size limit</li>
-      </ul>
-      <p>Other storage options</p>
-      <ul>
-        <li>Google Cloud SQL: relational database in the cloud</li>
-        <li>Google Cloud Storage: similar to a cloud-based filesystem</li>
-      </ul>
-    </article>
-  </slide>
+      <pre class="prettyprint" data-lang="java">
+DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+// Kind is Person, Identifier is danacton
+Entity dan = new Entity("Person", "danacton");
+dan.setProperty("name", "Dan");
+dan.setProperty("hairColour", "brown");
+datastore.put(dan);
 
-  <slide>
-    <hgroup>
-      <h2>Some important concepts</h2>
-    </hgroup>
-    <article>
-      <p>Use Memcache</p>
-      <ul>
-        <li>Key-value in-memory cache</li>
-        <li>Before going to database, check the cache</li>
-        <li>Put often-used data in the cache</li>
-      </ul>
-      <p>Defer (with Tasks) where you can</p>
-      <ul>
-        <li>time(task) &gt; <code>x</code> ms =&gt; defer</li>
-        <li>Example: lazy write, quick read</li>
-      </ul>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Getting started with Google App Engine</h2>
-      <h3>Part 1: Installing necessary software</h3>
-    </hgroup>
-    <article>
-      <p>Start here: <a
-      href="https://developers.google.com/appengine">developers.google.com/appengine</a></p>
-      <p>Python: Get the Google App Engine SDK</p>
-      <p>Java: Use Eclipse</p>
-      <ul>
-        <li>Install Eclipse for Java</li>
-        <li>Install the Google Plugin for Eclipse (with Google App Engine option)</li>
-      </ul>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Getting started with Google App Engine</h2>
-      <h3>Part 2: A Hello World project in Java</h3>
-    </hgroup>
-    <article>
-      <p>Java: Use Eclipse</p>
-      <ul>
-        <li>New Project -&gt; Google -&gt; Web Application Project</li>
-        <li>Select "Generate project sample code"</li>
-        <li>Modify <code>&lt;application&gt;&lt;/application&gt;</code></li>
-        <li>Run As -&gt; Web Application Project</li>
-        <li>Visit localhost:8888</li>
-      </ul>
-      <p><a href="http://googcloudlabs.appspot.com/codelabexercise0.html">Source: online documentation</a></p>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Getting started with Google App Engine</h2>
-      <h3>Part 2: A Hello World project in Python</h3>
-    </hgroup>
-    <article>
-      <p>Create a file helloworld/helloworld.py</p>
-      <pre class="prettyprint" data-lang="python">
-import webapp2
-
-class MainPage(webapp2.RequestHandler):
-
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Hello, World!')
-
-application = webapp2.WSGIApplication([
-    ('/', MainPage),
-], debug=True)
+Entity danChild = new Entity("Person", "danchild1", dan.getKey());
+danChild.setProperty("name", "Dan Child");
+danChild.setProperty("hairColour", "brown");
+datastore.put(danChild);
       </pre>
-      <p><a href="https://developers.google.com/appengine/docs/python/gettingstartedpython27/helloworld">Source: online documentation</a></p>
     </article>
   </slide>
 
   <slide>
     <hgroup>
-      <h2>Getting started with Google App Engine</h2>
-      <h3>Part 2: A Hello World project in Python</h3>
+      <h2>Using the Datastore viewer</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <p>Visit <a href="http://localhost:8888/_ah/admin">http://localhost:8888/_ah/admin</a></p>
+        <img src="images/appengine-datastore-viewer.png">
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Modifying data in datastore</h2>
     </hgroup>
     <article>
-      <p>Create a file helloworld/app.yaml</p>
-      <pre class="prettyprint" data-lang="yaml">
-application: your-app-id
-version: 1
-runtime: python27
-api_version: 1
-threadsafe: true
-
-handlers:
-- url: /.*
-  script: helloworld.application
+      <p>Update</p>
+      <pre class="prettyprint" data-lang="java">
+Entity dan = datastore.get(KeyFactory.stringToKey(...));
+dan.setProperty("name", "Daniel");
+datastore.put(dan);
+// key from datastore viewer for now
       </pre>
-      <p><a href="https://developers.google.com/appengine/docs/python/gettingstartedpython27/helloworld">Source: online documentation</a></p>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Getting started with Google App Engine</h2>
-      <h3>Part 2: A Hello World project in Python</h3>
-    </hgroup>
-    <article>
-      <p>Run your application from command line</p>
-      <pre class="prettyprint" data-lang="shell">
-google_appengine/dev_appserver.py helloworld/
+      <p>Delete</p>
+      <pre class="prettyprint" data-lang="java">
+datastore.delete(KeyFactory.stringToKey(...));
+// key from datastore viewer for now
       </pre>
-      <p>Or use the Google App Engine Launcher</p>
-      <p><a href="https://developers.google.com/appengine/docs/python/gettingstartedpython27/helloworld">Source: online documentation</a></p>
     </article>
   </slide>
 
   <slide>
     <hgroup>
-      <h2>Real-world stories</h2>
+      <h2>Querying data in datastore</h2>
     </hgroup>
     <article>
-      <iframe width="560" height="315" data-src="//www.youtube.com/embed/uy0nALQEAM4" frameborder="0" allowfullscreen></iframe>
+      <pre class="prettyprint" data-lang="java">
+Filter nameFilter = new FilterPredicate("hairColour", FilterOperator.EQUAL, "brown");
+Query q = new Query("Person").setFilter(nameFilter);
+resp.setContentType("text/html");
+
+PreparedQuery pq = datastore.prepare(q);
+for (Entity result : pq.asIterable()) {
+  String name = (String) result.getProperty("name");
+  resp.getWriter().println("Person &lt;b&gt;" + name + "&lt;/b&gt; has brown hair&lt;br/&gt;");
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 3: Datastore CRUD</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Create 4 new servlets
+          <ul>
+            <li>CreateServlet - servlet path /create</li>
+            <li>ListServlet - servlet path /list</li>
+            <li>UpdateServlet - servlet path /update</li>
+            <li>DeleteServlet - servlet path /delete</li>
+          </ul>
+        </li>
+        <br />
+        <li>1. Create 2 entities of type Person</li>
+        <li>2. List the entities</li>
+        <li>3. Note the keys (can use Datastore viewer)</li>
+        <li>4. Update 1 of the entities</li>
+        <li>5. Delete 1 of the entities</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Storing data with Datastore: JDO</h2>
+    </hgroup>
+      <article class="smaller">
+      <ul>
+        <li>Java Data Objects</li>
+        <li>Create POJOs with annotations</li>
+      </ul>
+      <pre class="prettyprint" data-lang="java">
+<b>@PersistenceCapable</b>
+public class Person {
+  <b>@PrimaryKey
+  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)</b>
+  private Long id;
+
+  <b>@Persistent</b>
+  private String name;
+
+  @Persistent
+  private String hairColour;
+
+  public Person() {}
+
+  // Getters and setters
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>The PerstistenceManagerFactory class</h2>
+    </hgroup>
+    <article class="smaller">
+      <ul>
+        <li>Singleton class that manages your JDO datastore access</li>
+        <li>See <code>src/META-INF/jdoconfig.xml</code> for configuration</li>
+      </ul>
+      <pre class="prettyprint" data-lang="java">
+package com.samples.exercises.dataobjects;
+
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManagerFactory;
+
+public final class PMF {
+  private static final PersistenceManagerFactory pmfInstance =
+      JDOHelper.getPersistenceManagerFactory("transactions-optional");
+
+  private PMF() {}
+
+  public static PersistenceManagerFactory get() {
+    return pmfInstance;
+  }
+
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Creating data with Datastore: JDO</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint" data-lang="java">
+PersistenceManager pm = PMF.get().getPersistenceManager();
+
+Person dan = new Person();
+dan.setName("Dan");
+dan.setHairColour("brown");
+
+Person danChild = new Person();
+danChild.setName("Dan Child");
+danChild.setHairColour("brown");
+
+try {
+  pm.makePersistent(dan);
+  pm.makePersistent(danChild);
+} finally {
+  pm.close();
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Modifying data in datastore</h2>
+    </hgroup>
+    <article>
+      <p>Update</p>
+      <pre class="prettyprint" data-lang="java">
+PersistenceManager pm = PMF.get().getPersistenceManager();
+Person dan = pm.getObjectById(Person.class, ...);
+dan.setName("Daniel");
+pm.makePersistent(dan);
+// id from datastore viewer for now
+      </pre>
+      <p>Delete</p>
+      <pre class="prettyprint" data-lang="java">
+PersistenceManager pm = PMF.get().getPersistenceManager();
+Person dan = pm.getObjectById(Person.class, ...);
+pm.deletePersistent(dan);
+// id from datastore viewer for now
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Querying data in datastore</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint" data-lang="java">
+PersistenceManager pm = PMF.get().getPersistenceManager();
+Query q = pm.newQuery(Person.class, "hairColour == 'brown' order by name desc");
+
+resp.setContentType("text/html");
+List&lt;Person&gt; results = (List&lt;Person&gt;) q.execute();
+for (Person p : results) {
+  String name = p.getName();
+  resp.getWriter().println("Person &lt;b&gt;" + name + "&lt;/b&gt; has brown hair&lt;br/&gt;");
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 4: Datastore JDO CRUD</h2>
+    </hgroup>
+    <article>
+      <ul> 
+        <li>Update the 4 servlets from Exercise 3 to use JDO</li>
+        <li>You'll need a class and a PMF</li>
+        <li>1. Create 2 entities of type Person</li>
+        <li>2. List the entities</li>
+        <li>3. Note the keys (can use Datastore viewer)</li>
+        <li>4. Update 1 of the entities</li>
+        <li>5. Delete 1 of the entities</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Java Servlet Pages: JSP</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Dynamic server-side coding of HTML pages</li>
+        <li>An HTML page with Java code in it</li>
+        <li>Whereas a servlet is Java code that prints some HTML</li>
+        <li>Presentation layer for your data</li>
+        <li>Extension .jsp</li>
+        <li>In the <code>war</code> directory</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Java Servlet Pages: JSP</h2>
+    </hgroup>
+    <article>
+      <p>Start by denoting this is a JSP page</p>
+      <pre class="prettyprint" data-lang="jsp">
+&lt;%@page language="java" contentType="text/html; charset=UTF-8"
+            pageEncoding="UTF-8"%&gt;
+      </pre>
+      <p>Import required classes</p>
+      <pre class="prettyprint" data-lang="jsp">
+&lt;%@page import="java.util.Date" %&gt;
+      </pre>
+      <p>Add Java code to your JSP pages</p>
+      <pre class="prettyprint" data-lang="jsp">
+&lt;b&gt;&lt;% out.println(new Date()); %&gt;&lt;/b&gt;
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>A simple example</h2>
+    </hgroup>
+    <article>
+    <pre class="prettyprint" data-lang="jsp">
+&lt;%@page language="java" contentType="text/html; charset=UTF-8"
+           pageEncoding="UTF-8"%&gt;
+&lt;%@page import="java.util.Date" %&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;A simple example&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p&gt;
+      The date is: &lt;b&gt;&lt;% out.println(new Date()); %&gt;&lt;/b&gt;
+    &lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+    </article>
+  </slide>
+
+    <slide>
+    <hgroup>
+      <h2>Passing parameters</h2>
+    </hgroup>
+    <article>
+      <p>Before, we hard-coded keys. Now, we pass them around.</p>
+      <p>Using HTTP GET</p>
+      <pre>
+http://localhost:8888/update?id=4
+      </pre>
+      <p>Using HTTP POST with a form</p>
+      <pre class="prettyprint" data-lang="html">
+&lt;form action="/update" method="POST"&gt;
+  &lt;input type="hidden" name="id" value="4"&gt;
+&lt;/form&gt;
+      </pre>
+    </article>
+  </slide>
+
+    <slide>
+    <hgroup>
+      <h2>Passing parameters</h2>
+    </hgroup>
+    <article>
+      <p>In your code</p>
+      <pre class="prettyprint" data-lang="jsp">
+&lt;%
+  String val = "nothing";
+  if (request.getParameter("id") != null) {
+    val = <b>request.getParameter("id");</b>
+  }
+%&gt;
+The id you passed is &lt;b&gt;&lt;%=val%&gt;&lt;/b&gt;
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 5: Your first App Engine web app</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Create a web app that manages people</li>
+        <li>These operations are required
+          <ul>
+            <li>Create a Person</li>
+            <li>Update a Person</li>
+            <li>Delete a Person</li>
+          </ul>
+        </li>
+      </ul>
+        <img src="images/app-people-manager.png">
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 5: Hints</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Use servlets to do the work (e.g. deleting a Person)</li>
+        <li>Use JSP for presentation/data capture (e.g. showing all Person objects)</li>
+        <li>Servlets: create, delete, update</li>
+        <li>JSPs: home, update entry, create entry</li>
+      </ul>
     </article>
   </slide>
 
@@ -250,7 +661,7 @@ google_appengine/dev_appserver.py helloworld/
       <ul>
         <li><a href="https://developers.google.com/appengine/">Google App Engine documentation</a></li>
         <li><a href="http://googcloudlabs.appspot.com/">Google App Engine code tutorials</a></li>
-        <li>These slides</li>
+        <li><a href="http://danpresos.appspot.com/AppEngine101/index.html">These slides</a></li>
       </ul>
     </article>
   </slide>
@@ -275,16 +686,20 @@ google_appengine/dev_appserver.py helloworld/
 
 </slides>
 
-<script>
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
-_gaq.push(['_trackPageview']);
+<script type="text/javascript">
 
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3160417-5']);
+  _gaq.push(['_setDomainName', 'danpresos.appspot.com']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
 </script>
 
 <!--[if IE]>

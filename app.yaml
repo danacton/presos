@@ -9,5 +9,11 @@ handlers:
 - url: /AppEngine101
   static_dir: AppEngine101
 
+- url: /AppEngine201
+  static_dir: AppEngine201
+
+- url: /namekeepr
+  static_dir: namekeepr
+
 - url: /.*
   script: danpresos.application

@@ -1,0 +1,479 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google App Engine 101</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+  <style>
+    .italic {
+      font-style: italic;
+    }
+  </style>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/google_developers_logo.png"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/google_developers_icon_128.png"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Starting point</h2>
+    </hgroup>
+    <article>
+      <p>In <a href="http://danpresos.appspot.com/AppEngine101/index.html">App Engine 101</a> we covered</p>
+      <ul>
+        <li>Working with App Engine in Eclipse</li>
+        <li>The anatomy of a web app</li>
+        <li>Servlets</li>
+        <li>Datastore Entities</li>
+        <li>Datastore JDO</li>
+        <li>JSP</li>
+        <li>Passing parameters</li>
+      </ul>
+    </article>
+  </slide>
+  <slide>
+    <hgroup>
+      <h2>This session</h2>
+    </hgroup>
+    <article>
+      <p>Here, we cover</p>
+      <ul>
+        <li>Logging</li>
+        <li>Memcache</li>
+        <li>Blobstore and Image Service</li>
+        <li>Google Cloud Endpoints</li>
+        <li>Signin</li>
+        <li>The App Engine web interface</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Logging</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Use <code>java.util.logging</code> approach</li>
+        <li>On dev server, shows in console</li>
+        <li>On live server, shows in admin interface</li>
+      </ul>
+      <pre class="prettyprint" data-lang="java">
+Logger log = Logger.getLogger(CreateServlet.class.getName());
+log.info("A log message!");
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Memcache</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>An in-memory cache</li>
+        <li>Store often-used data here, for example:
+          <ul>
+            <li>Session data</li>
+            <li>User preferences</li>
+            <li>Queries performed on most pages of a site</li>
+            <li>Classes implementing <code>Serializable</code></li>
+          </ul>
+        </li>
+        <li>Pattern:
+          <ul>
+            <li>Check if data is in memcache</li>
+            <li>If it is: use it</li>
+            <li>If not: get from datastore and put in memcache</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Memcache</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Make your class Serializable</p>
+      <pre class="prettyprint" data-lang="java">
+public class Person implements <b>Serializable</b>
+      </pre>
+      <p>Use code to check and put in cache similar to this</p>
+      <pre class="prettyprint" data-lang="java">
+String key = "Person"+id;
+MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+Person p = (Person) syncCache.get(key);
+if (p == null) {
+  log.info("Cache miss for " + key);
+  p = pm.getObjectById(Person.class, id);
+  syncCache.put(key, p);
+} else {
+  log.info("Cache hit for " + key);
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 1: Memcache</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Amend update.jsp to first check the cache for the Person before
+        reading Datastore</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Blobstore and Image Service</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Blobstore is a storage service for arbitrary-size binary data</p>
+      <ul>
+        <li>No querying on Blobstore</li>
+        <li>Key/value interface</li>
+      </ul>
+      <p>Step 1: Create a form in your JSP that posts to a special Blobstore URL</p>
+      <pre class="prettyprint" data-lang="jsp">
+&lt;%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %&gt;
+&lt;%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %&gt;
+&lt;% BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(); %&gt;
+
+&lt;form action="&lt;%= blobstoreService.createUploadUrl("/uploadpicture") %&gt;" 
+         method="post" enctype="multipart/form-data"&gt;
+  &lt;input type="file" name="pictureFile"&gt;
+&lt;/form&gt;
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Blobstore and Image Service</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Step 2: Create a servlet that gets passed the information once uploaded</p>
+      <pre class="prettyprint" data-lang="java">
+BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+ImagesService imagesService = ImagesServiceFactory.getImagesService();
+
+Map&lt;String, List&lt;BlobKey&gt;&gt; blobs = blobstoreService.getUploads(req);
+
+if (blobs.size() == 0) {
+  resp.sendRedirect("/create.jsp");
+} else {
+  BlobKey k = blobs.get("pictureFile").get(0);
+  // Do something with the blob key
+}
+    </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Blobstore and Image Service</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Step 3: Use the Image Service to create a serving URL and a thumbnail URL</p>
+      <pre class="prettyprint" data-lang="java">
+ServingUrlOptions soOriginal = ServingUrlOptions.Builder.withBlobKey(k);
+ServingUrlOptions soThumb = ServingUrlOptions.Builder.withBlobKey(k).imageSize(100);
+String origUrl = imagesService.getServingUrl(soOriginal);
+String thumbUrl = imagesService.getServingUrl(soThumb);
+
+req.setAttribute("origUrl", origUrl);
+req.setAttribute("thumbUrl", thumbUrl);
+req.getRequestDispatcher("/create.jsp").forward(req, resp);
+    </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Blobstore and Image Service</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Step 4: Use the serving URL and thumbnail URL in your JSP page</p>
+      <pre class="prettyprint" data-lang="jsp">
+<% if (request.getAttribute("thumbUrl") != null) { %>
+ &lt;img src="<%=request.getAttribute("thumbUrl")%>"&gt;
+<% } %>
+    </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google Cloud Endpoints</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>We've been creating our own URL structure with servlets</li>
+        <li>We have to manage the semantics of the HTTP methods (POST, GET, etc.)</li>
+        <li>Code for managing entities is spread across servlets/JSP pages</li>
+      </ul>
+      <p>Google Cloud Endpoints can help!</p>
+      <ul>
+        <li>Create a RESTful API for your application to manage data</li>
+        <li>Create one class as an API</li>
+        <li>You get libraries for your API for iOS, Android and Javascript</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google Cloud Endpoints</h2>
+    </hgroup>
+    <article>
+      <p>Step 1: Create an endpoint class</p>
+      <p>Annotate with <code>@Api</code></p>
+      <pre class="prettyprint" data-lang="java">
+<b>@Api(name = "person", version = "v1", description = "Person API")</b>
+public class PersonEndpoint {
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google Cloud Endpoints</h2>
+    </hgroup>
+    <article>
+      <p>Step 2: Create API Methods</p>
+      <p>Annotate with <code>@ApiMethod</code></p>
+      <pre class="prettyprint" data-lang="java">
+<b>@ApiMethod(name = "read", httpMethod = HttpMethod.GET, path = "/person")</b>
+public Person readPerson(@Named("id") Long id) {
+  PersistenceManager pm = PMF.get().getPersistenceManager();
+  Person person = null;
+  try {
+    person = pm.getObjectById(Person.class, id);
+  } finally {
+    pm.close();
+  }
+  return person;
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google Cloud Endpoints</h2>
+    </hgroup>
+    <article>
+      <p>Step 3: Create the library</p>
+      <img src="images/gen-gce.png">
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google Cloud Endpoints</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Step 4: Use the library</p>
+      <pre class="prettyprint" data-lang="html">
+&lt;script&gt;
+  function init() {
+    var ROOT = '//' + window.location.host + '/_ah/api';
+    gapi.client.load('person', 'v1', function() {
+      console.log('Loaded API');
+    }, ROOT);
+  }
+&lt;/script&gt;
+&lt;script src="https://apis.google.com/js/client.js?onload=init"&gt;&lt;/script&gt;
+      </pre>
+      <pre class="prettyprint" data-lang="javascript">
+gapi.client.person.list().execute(com.samples.exercises.displayPeople);
+
+com.samples.exercises.displayPeople = function(datalist) {
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google Cloud Endpoints</h2>
+    </hgroup>
+    <article>
+      <p>Some explanations ...</p>
+      <ul>
+        <li>It's the same code as you've written all along</li>
+        <li>The parameters to the method are the same as your request parameters in servlet or JSP</li>
+        <li><code>@Named</code> tells your method to use the "id" parameter</li>
+        <li><code>@Nullable</code> tells your method the parameter is optional</li>
+        <li>You can see your API and call the methods at <a href="http://localhost:8888/_ah/api/explorer">http://localhost:8888/_ah/api/explorer</a></li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Exercise 2: Cloud Endpoints</h2>
+    </hgroup>
+    <article class="smaller">
+      <ul>
+        <li>Convert your servlets to a Cloud Endpoint</li>
+        <li>Here's a skeleton</li>
+      </ul>
+      <pre class="prettyprint" data-lang="java">
+@Api(name = "person", version = "v1", description = "Person API")
+public class PersonEndpoint {
+
+  @ApiMethod(name = "list", path = "/list", httpMethod = HttpMethod.GET)
+  public CollectionResponse<Person> listPersons(
+      @Nullable @Named("cursor") String cursorString,
+      @Nullable @Named("limit") Integer limit) {
+  }
+
+  @ApiMethod(name = "create", httpMethod = HttpMethod.POST, path = "/person")
+  public Person insertPerson(Person person) {
+  }
+
+  @ApiMethod(name = "remove", httpMethod = HttpMethod.DELETE, path = "/person")
+  public void removePerson(@Named("id") Long id) {
+  }
+
+  @ApiMethod(name = "read", httpMethod = HttpMethod.GET, path = "/person")
+  public Person readPerson(@Named("id") Long id) {
+  }
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Restricting to signed-in users</h2>
+    </hgroup>
+    <article>
+      <p>Signin options (specified when creating your app)</p>
+      <ul>
+        <li>Your Google domain (Google Apps)</li>
+        <li>Any Google account</li>
+        <li>OpenID accounts</li>
+      </ul>
+      <p>Specify this in your <code>web.xml</code></p>
+      <pre class="prettyprint" data-lang="xml">
+&lt;security-constraint&gt;
+  &lt;web-resource-collection&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/web-resource-collection&gt;
+  &lt;auth-constraint&gt;
+    &lt;role-name&gt;*&lt;/role-name&gt;
+  &lt;/auth-constraint&gt;
+&lt;/security-constraint&gt;
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>A tour of the App Engine interface and Namekeepr</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>The App Engine management console</li>
+        <li>Namekeepr, a sample application</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Useful links</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li><a href="https://developers.google.com/appengine/">Google App Engine documentation</a></li>
+        <li><a href="http://googcloudlabs.appspot.com/">Google App Engine code tutorials</a></li>
+        <li><a href="http://danpresos.appspot.com/AppEngine101/index.html">These slides</a></li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/google_developers_icon_128.png"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>&lt;Thank You!&gt;</h2>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="logoslide dark nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/google_developers_logo_white.png"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3160417-5']);
+  _gaq.push(['_setDomainName', 'danpresos.appspot.com']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google App Engine 101</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+  <style>
+    .italic {
+      font-style: italic;
+    }
+#movingBox {
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+
+  background: red;
+  height: 50px;
+  width: 50px;
+}
+#movingBox2 {
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+
+  background: red;
+  height: 50px;
+  width: 50px;
+}
+.roundedButton { 
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  border: 1px solid #bbb;
+  background: #c0c0c0;
+}
+.unroundedButton { 
+  border-radius: 0px;
+  -moz-border-radius: 0px;
+  border: 1px solid #bbb;
+  background: #c0c0c0;
+}
+
+  </style>
+  <script>
+    function rotate(amt, axis) {
+      var fn = 'rotate' + axis;
+      document.querySelector('#movingBox2').style['transform'] = fn + '(' + amt + ')';
+      document.querySelector('#movingBox2').style['-o-transform'] = fn + '(' + amt + ')';
+      document.querySelector('#movingBox2').style['-webkit-transform'] = fn + '(' + amt + ')';
+      document.querySelector('#movingBox2').style['-moz-transform'] = fn + '(' + amt + ')';
+    }
+  </script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/google_developers_logo.png"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/google_developers_icon_128.png"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is HTML5?</h2>
+    </hgroup>
+    <article>
+      <p>The latest version of HTML</p>
+      <p><code>&lt;!DOCTYPE html&gt;</code></p>
+      <p>Updated elements (<a
+              href="http://www.w3.org/TR/html5-diff/">http://www.w3.org/TR/html5-diff</a>)</p>
+      <ul>
+        <li>29 new elements and lots of new attributes, with 14 removed elements</li>
+      </ul>
+      <p>A set of Javascript APIs that help build cross-platform web applications, e.g.</p>
+      <ul>
+        <li>Geolocation</li>
+        <li>Local Storage</li>
+        <li>FileReader</li>
+        <li>WebGL</li>
+        <li>Video and Audio</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>New elements</h2>
+    </hgroup>
+    <article>
+      <p>Examples of new semantic elements</p>
+      <ul>
+        <li><code>&lt;section&gt;</code> - indicates a section of the web page</li>
+        <li><code>&lt;article&gt;</code> - indicates an independent piece of content </li>
+        <li><code>&lt;header&gt;</code> - indicates header content - titles, etc.</li>
+        <li><code>&lt;footer&gt;</code> - indicates content in the footer, e.g. copyright</li>
+        <li><code>&lt;nav&gt;</code> - indicates navigational separation</li>
+      </ul>
+      <p>Examples of other new elements</p>
+      <ul>
+        <li><code>&lt;video&gt;</code> - indicates a section of the web page</li>
+        <li><code>&lt;audio&gt;</code> - indicates an independent piece of content </li>
+        <li><code>&lt;canvas&gt;</code> - used to draw with Javascript</li>
+      </ul>
+    </article>
+  </slide>
+
+
+  <slide>
+    <hgroup>
+      <h2>New Javascript APIs</h2>
+    </hgroup>
+    <article>
+      <p>Geolocation</p>
+<pre class="prettyprint" data-lang="javascript">
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+} else {
+  console.log('Geolocation is not supported.');
+}
+</pre>
+      <p>Local Storage</p>
+<pre class="prettyprint" data-lang="javascript">
+if (window.localStorage) {
+  window.localStorage.setItem('key', 'value');
+  value = window.localStorage.getItem('key');
+} else {
+  console.log('Local storage is not supported.');
+}
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>More new Javascript APIs</h2>
+    </hgroup>
+    <article>
+      <p>File API</p>
+<pre class="prettyprint" data-lang="javascript">
+if (window.FileReader) {
+  var reader = new FileReader();
+  reader.readAsDataURL(document.getElementById('file').files[0]);
+  reader.onload = function(event) {
+    // do something with the content
+  };
+  reader.onerror = function() {
+    // let the user know something went wrong
+  };
+} else {
+  console.log('File API is not supported.');
+}
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>One more new cool thing</h2>
+    </hgroup>
+    <article>
+      <p>Query Selectors</p>
+<pre class="prettyprint" data-lang="javascript">
+var elts = document.querySelectorAll('div');
+var elt = document.querySelector('#elementId');
+var elts = document.querySelectorAll('.elementClass');
+var input = element.querySelector('input[type=file]');
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>CSS3</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Web Fonts</p>
+      <pre class="prettyprint" data-lang="css">
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Droid Sans'), url(url_to_ttf_file) format('truetype');
+}
+      </pre>
+      <p>OR</p>
+      <pre class="prettyprint" data-lang="css">
+@import url(http://fonts.googleapis.com/css?family=Cinzel+Decorative);
+      </pre>
+      <p>THEN</p>
+      <pre class="prettyprint" data-lang="css">
+p {
+  font-family: "Droid Sans", Arial, sans-serif;
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>CSS3</h2>
+    </hgroup>
+    <article>
+      <p>Rounded corners</p>
+      <pre class="prettyprint" data-lang="css">
+.roundedButton { 
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  border: 1px solid #bbb;
+  background: #c0c0c0;
+}
+      </pre>
+<button class="unroundedButton">Unrounded Button</button>
+<button class="roundedButton">Rounded Button</button>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>CSS3</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Transitions</p>
+      <pre class="prettyprint" data-lang="css">
+#movingBox {
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+
+  background: red;
+  height: 50px;
+  width: 50px;
+}
+      </pre>
+      <pre class="prettyprint" data-lang="javascript">
+document.querySelector('#movingBox').style.background = 'blue';
+document.querySelector('#movingBox').style.width = '100px';
+      </pre>
+<input type="button" onclick="document.querySelector('#movingBox').style.background = 'blue';" value="Change colour" />
+<input type="button" onclick="document.querySelector('#movingBox').style.width = '100px';" value="Change size" />
+<div id="movingBox">&nbsp;</div>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>CSS3</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Transforms</p>
+      <pre class="prettyprint" data-lang="css">
+#movingBox {
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+
+  background: red;
+  height: 50px;
+  width: 50px;
+}
+      </pre>
+      <pre class="prettyprint" data-lang="javascript">
+document.querySelector('#movingBox').style['-moz-transform'] = 'rotateX(45deg)';
+      </pre>
+<input type="button" onclick="rotate('45deg', 'X');" value="Rotate X" />
+<input type="button" onclick="rotate('45deg', 'Y');" value="Rotate Y" />
+<input type="button" onclick="rotate('45deg', 'Z');" value="Rotate Z" />
+<div id="movingBox2">&nbsp;</div>
+    </article>
+  </slide>
+
+
+  <slide>
+    <hgroup>
+      <h2>Responsive Design</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Write one set of content</li>
+        <li>Adapt your pages to the user agent with CSS</li>
+        <li>Use media queries</li>
+        <li>Use relative sizes (widths, font sizes, etc.)</li>
+      </ul>
+<pre class="prettyprint" data-lang="css">
+@media screen and (min-width: 320px) and (max-width: 479px) {
+  /* Screen is 320-480px wide */
+}
+@media screen and (min-width: 480px) {
+  /* Screen is more than 480px wide */
+}
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Useful links</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li><a href="http://www.html5rocks.com/">HTML5 Rocks</a></li>
+        <li><a href="http://danpresos.appspot.com/HTML5CssResponsive/index.html">These slides</a></li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/google_developers_icon_128.png"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>&lt;Thank You!&gt;</h2>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="logoslide dark nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/google_developers_logo_white.png"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3160417-5']);
+  _gaq.push(['_setDomainName', 'danpresos.appspot.com']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
