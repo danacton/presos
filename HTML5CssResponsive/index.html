@@ -3,6 +3,7 @@ Google IO 2012/2013 HTML5 Slide Template
 
 Authors: Eric Bidelman <ebidel@gmail.com>
          Luke Mahé <lukem@google.com>
+         Daniel Acton <code@danielacton.com>
 
 URL: https://code.google.com/p/io-2012-slides
 -->
@@ -55,6 +56,9 @@ URL: https://code.google.com/p/io-2012-slides
   border: 1px solid #bbb;
   background: #c0c0c0;
 }
+#shoppingList, #locationData {
+  font-size: 1em;
+}
 
   </style>
   <script>
@@ -64,6 +68,93 @@ URL: https://code.google.com/p/io-2012-slides
       document.querySelector('#movingBox2').style['-o-transform'] = fn + '(' + amt + ')';
       document.querySelector('#movingBox2').style['-webkit-transform'] = fn + '(' + amt + ')';
       document.querySelector('#movingBox2').style['-moz-transform'] = fn + '(' + amt + ')';
+    }
+    function geolocateMe() {
+      var posElt = document.querySelector('#locationData');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            posElt.innerHTML = 'Position is (' + position.coords.latitude + ', ' + position.coords.longitude + ')';
+          }, function() {
+            posElt.innerHTML = 'Failed to get current location'; 
+          });
+      }
+      else {
+        posElt.innerHTML = 'Location not supported';
+      }
+    }
+    function addItemToShoppingList() {
+      var item = document.querySelector('#shoppingItem').value;
+      var outputElt = document.querySelector('#shoppingList');
+
+      if (window.localStorage) {
+        var list = window.localStorage.getItem('shoppingList');
+        if (!list || list.length == 0) {
+          list = item;
+        } else {
+          list = list + '<br/>' + item;
+        }
+
+        window.localStorage.setItem('shoppingList', list);
+        outputElt.innerHTML = 'Thanks, added.';
+      } else {
+        outputElt.innerHTML = 'Local Storage is not supported';
+      }
+    }
+    function showShoppingList() {
+      var outputElt = document.querySelector('#shoppingList');
+
+      if (window.localStorage) {
+        var list = window.localStorage.getItem('shoppingList');
+        if (!list || list.length == 0) {
+          outputElt.innerHTML = 'List is empty.'; 
+        } else {
+          outputElt.innerHTML = list;
+        }
+
+      } else {
+        outputElt.innerHTML = 'Local Storage is not supported';
+      }
+    }
+    function clearShoppingList() {
+      var outputElt = document.querySelector('#shoppingList');
+
+      if (window.localStorage) {
+        window.localStorage.removeItem('shoppingList');
+        outputElt.innerHTML = 'Cleared.';
+      } else {
+        outputElt.innerHTML = 'Local Storage is not supported';
+      }
+    }
+    function previewPicture() {
+      var outputElt = document.querySelector('#fileData');
+      var input = document.querySelector('input[type=file]');
+      var file = input.files[0];
+      if (window.FileReader) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          var dataURL = e.target.result;
+          var c = document.getElementById('canvas');
+          var ctx = c.getContext('2d');
+          var img = document.createElement('img');
+          img.src = dataURL;
+          img.border = '1';
+          ctx.drawImage(img, 0, 0);
+          outputElt.innerHTML = '<a href="' + dataURL + '">Click here to see the image</a> (and look on slide 8)';
+        };
+
+        reader.onProgress = function() {
+          console.log('a');
+        }
+
+        reader.readAsDataURL(file);
+      } else {
+        outputElt.innerHTML = 'FileReader API not supported';
+      }
+    }
+    function changeProgress(val) {
+      document.querySelector('#progressBar').value += val;
     }
   </script>
 </head>
@@ -92,21 +183,19 @@ URL: https://code.google.com/p/io-2012-slides
       <h2>What is HTML5?</h2>
     </hgroup>
     <article>
-      <p>The latest version of HTML</p>
-      <p><code>&lt;!DOCTYPE html&gt;</code></p>
-      <p>Updated elements (<a
-              href="http://www.w3.org/TR/html5-diff/">http://www.w3.org/TR/html5-diff</a>)</p>
+      <p>The evolution of HTML for rich web applications</p>
+      <p>HTML5 is more than just HTML</p>
       <ul>
-        <li>29 new elements and lots of new attributes, with 14 removed elements</li>
+        <li>An update to the HTML markup language (elements and attributes added and removed)</li>
+        <li>Some web application APIs</li>
       </ul>
-      <p>A set of Javascript APIs that help build cross-platform web applications, e.g.</p>
+      <p>Organisations and Standards</p>
       <ul>
-        <li>Geolocation</li>
-        <li>Local Storage</li>
-        <li>FileReader</li>
-        <li>WebGL</li>
-        <li>Video and Audio</li>
+        <li><a href="http://developers.whatwg.org/">WHATWG</a> defines "HTML: The Living Standard"</li>
+        <li><a href="http://www.w3.org/TR/html5/">W3C</a> defines HTML5</li>
+        <li>W3C forked from WHATWG at some point in the past</li>
       </ul>
+      <p>All you need is <code>&lt;!DOCTYPE html&gt;</code></p>
     </article>
   </slide>
 
@@ -115,7 +204,7 @@ URL: https://code.google.com/p/io-2012-slides
       <h2>New elements</h2>
     </hgroup>
     <article>
-      <p>Examples of new semantic elements</p>
+      <p>Examples of new semantic/structural elements</p>
       <ul>
         <li><code>&lt;section&gt;</code> - indicates a section of the web page</li>
         <li><code>&lt;article&gt;</code> - indicates an independent piece of content </li>
@@ -132,13 +221,94 @@ URL: https://code.google.com/p/io-2012-slides
     </article>
   </slide>
 
+  <slide>
+    <hgroup>
+      <h2>DOM Query Selector</h2>
+    </hgroup>
+    <article>
+      <p>Query Selectors</p>
+<pre class="prettyprint" data-lang="javascript">
+var elts = document.querySelectorAll('div');
+var elt = document.querySelector('#elementId');
+var elts = document.querySelectorAll('.elementClass');
+var input = element.querySelector('input[type=file]');
+</pre>
+    </article>
+  </slide>
+
 
   <slide>
     <hgroup>
-      <h2>New Javascript APIs</h2>
+      <h2>New element: datalist</h2>
     </hgroup>
     <article>
-      <p>Geolocation</p>
+    <pre class="prettyprint" data-lang="html">
+&lt;input list="newElementTypes" /&gt;
+&lt;datalist id="newElementTypes"&gt;
+  &lt;option value="section"/&gt;
+  &lt;option value="header"/&gt;
+  &lt;option value="footer"/&gt;
+  &lt;option value="progress"/&gt;
+&lt;/datalist&gt;
+    </pre>
+      <p>Example</p>
+      <p>
+        <input list="newElementTypes" />
+        <datalist id="newElementTypes">
+          <option value="section"/>
+          <option value="header"/>
+          <option value="footer"/>
+          <option value="progress"/>
+        </datalist>
+      </p>
+      <p>Start typing, it should autocomplete</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>New element: progress</h2>
+    </hgroup>
+    <article>
+    <pre class="prettyprint" data-lang="html">
+&lt;progress value="0" max="100"&gt;&lt;/progress&gt;
+    </pre>
+      <p>Example</p>
+      <p>
+        <progress id="progressBar" value="0" max="100"></progress>
+        <input type="button" value="Increase" onclick="changeProgress(10)" />
+        <input type="button" value="Decrease" onclick="changeProgress(-10)" />
+      <p>
+    </article>
+  </slide>
+
+
+  <slide>
+    <hgroup>
+      <h2>New element: canvas</h2>
+    </hgroup>
+    <article class="smaller">
+    <pre class="prettyprint" data-lang="html">
+&lt;canvas id="canvas" width="320" height="240"&gt;&lt;/canvas&gt;
+    </pre>
+    <pre class="prettyprint" data-lang="javascript">
+var c = document.querySelector('#canvas');
+var ctx = c.getContext('2d');
+ctx.drawImage(someImage, 0, 0);
+    </pre>
+      <p>Example</p>
+      <p>To change the picture, load an image on slide 11</p>
+      <p>
+        <canvas id="canvas" width="320" height="240" style="border: 1px solid black;"></canvas>
+      <p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>New API: Geolocation</h2>
+    </hgroup>
+    <article>
 <pre class="prettyprint" data-lang="javascript">
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
@@ -146,7 +316,17 @@ if (navigator.geolocation) {
   console.log('Geolocation is not supported.');
 }
 </pre>
-      <p>Local Storage</p>
+      <p>Example</p>
+      <p><input type="button" value="Geolocate me!" onclick="geolocateMe()" /></p>
+      <p id="locationData"></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>New API: Local Storage</h2>
+    </hgroup>
+    <article>
 <pre class="prettyprint" data-lang="javascript">
 if (window.localStorage) {
   window.localStorage.setItem('key', 'value');
@@ -154,15 +334,23 @@ if (window.localStorage) {
 } else {
   console.log('Local storage is not supported.');
 }
+</pre>
+    <p>Example</p>
+    <p>
+      <input type="text" id="shoppingItem" />
+      <input type="button" value="Add to shopping list" onclick="addItemToShoppingList()" />
+      <input type="button" value="Show shopping list" onclick="showShoppingList()" />
+      <input type="button" value="Clear shopping list" onclick="clearShoppingList()" />
+    </p>
+    <p id="shoppingList"></p>
     </article>
   </slide>
 
   <slide>
     <hgroup>
-      <h2>More new Javascript APIs</h2>
+      <h2>New API: File</h2>
     </hgroup>
-    <article>
-      <p>File API</p>
+    <article class="smaller">
 <pre class="prettyprint" data-lang="javascript">
 if (window.FileReader) {
   var reader = new FileReader();
@@ -177,21 +365,12 @@ if (window.FileReader) {
   console.log('File API is not supported.');
 }
 </pre>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>One more new cool thing</h2>
-    </hgroup>
-    <article>
-      <p>Query Selectors</p>
-<pre class="prettyprint" data-lang="javascript">
-var elts = document.querySelectorAll('div');
-var elt = document.querySelector('#elementId');
-var elts = document.querySelectorAll('.elementClass');
-var input = element.querySelector('input[type=file]');
-</pre>
+    <p>Example</p>
+    <p>
+      <input type="button" id="proxybutton" value="Acquire" onclick="document.querySelector('#fileupload').click();" />
+      <input type="file" accept="image/png" capture="camera" id="fileupload" name="myFile" onchange="previewPicture();" style="display: none;" />
+    </p>
+    <p id="fileData"></p>
     </article>
   </slide>
 
