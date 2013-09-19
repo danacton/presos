@@ -44,13 +44,13 @@ URL: https://code.google.com/p/io-2012-slides
   height: 50px;
   width: 50px;
 }
-.roundedButton { 
+.roundedButton {
   border-radius: 5px;
   -moz-border-radius: 5px;
   border: 1px solid #bbb;
   background: #c0c0c0;
 }
-.unroundedButton { 
+.unroundedButton {
   border-radius: 0px;
   -moz-border-radius: 0px;
   border: 1px solid #bbb;
@@ -62,6 +62,7 @@ URL: https://code.google.com/p/io-2012-slides
 
   </style>
   <script>
+    // Rotate a particular element
     function rotate(amt, axis) {
       var fn = 'rotate' + axis;
       document.querySelector('#movingBox2').style['transform'] = fn + '(' + amt + ')';
@@ -69,20 +70,25 @@ URL: https://code.google.com/p/io-2012-slides
       document.querySelector('#movingBox2').style['-webkit-transform'] = fn + '(' + amt + ')';
       document.querySelector('#movingBox2').style['-moz-transform'] = fn + '(' + amt + ')';
     }
+
+    // Geolocate the user and update an element with the output
     function geolocateMe() {
       var posElt = document.querySelector('#locationData');
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function(position) {
             posElt.innerHTML = 'Position is (' + position.coords.latitude + ', ' + position.coords.longitude + ')';
-          }, function() {
-            posElt.innerHTML = 'Failed to get current location'; 
-          });
+          }, function(error) {
+            posElt.innerHTML = 'Failed to get current location';
+          },
+          {timeout:5000});
       }
       else {
         posElt.innerHTML = 'Location not supported';
       }
     }
+
+    // Store an item in Local Storage and write the result to an element
     function addItemToShoppingList() {
       var item = document.querySelector('#shoppingItem').value;
       var outputElt = document.querySelector('#shoppingList');
@@ -101,13 +107,15 @@ URL: https://code.google.com/p/io-2012-slides
         outputElt.innerHTML = 'Local Storage is not supported';
       }
     }
+
+    // Read an item in Local Storage and write the result to an element
     function showShoppingList() {
       var outputElt = document.querySelector('#shoppingList');
 
       if (window.localStorage) {
         var list = window.localStorage.getItem('shoppingList');
         if (!list || list.length == 0) {
-          outputElt.innerHTML = 'List is empty.'; 
+          outputElt.innerHTML = 'List is empty.';
         } else {
           outputElt.innerHTML = list;
         }
@@ -116,6 +124,8 @@ URL: https://code.google.com/p/io-2012-slides
         outputElt.innerHTML = 'Local Storage is not supported';
       }
     }
+
+    // Clear an item in Local Storage and write the result to an element
     function clearShoppingList() {
       var outputElt = document.querySelector('#shoppingList');
 
@@ -126,6 +136,8 @@ URL: https://code.google.com/p/io-2012-slides
         outputElt.innerHTML = 'Local Storage is not supported';
       }
     }
+
+    // Preview an image file uploaded by the user in a canvas
     function previewPicture() {
       var outputElt = document.querySelector('#fileData');
       var input = document.querySelector('input[type=file]');
@@ -144,15 +156,13 @@ URL: https://code.google.com/p/io-2012-slides
           outputElt.innerHTML = '<a href="' + dataURL + '">Click here to see the image</a> (and look on slide 8)';
         };
 
-        reader.onProgress = function() {
-          console.log('a');
-        }
-
         reader.readAsDataURL(file);
       } else {
         outputElt.innerHTML = 'FileReader API not supported';
       }
     }
+
+    // Update a progress indicator
     function changeProgress(val) {
       document.querySelector('#progressBar').value += val;
     }
@@ -196,6 +206,7 @@ URL: https://code.google.com/p/io-2012-slides
         <li>W3C forked from WHATWG at some point in the past</li>
       </ul>
       <p>All you need is <code>&lt;!DOCTYPE html&gt;</code></p>
+      <p>These slides are HTML5</p>
     </article>
   </slide>
 
@@ -500,26 +511,19 @@ document.querySelector('#movingBox').style['-moz-transform'] = 'rotateX(45deg)';
 
   <slide>
     <hgroup>
-      <h2>Some ideas</h2>
+      <h2>Summary</h2>
     </hgroup>
     <article>
       <ul>
-        <li>Hide visual elements with CSS3 effects</li>
-        <li>Geolocation with Google Maps (<a href="http://www.danielacton.com/Mashups/HTML5-Location-WebStorage/">example</a>)</li>
-        <li>Use Local Storage to store user preferences or auto-save form data</li>
-        <li>Use File API and Canvas to provide previews of images you're uploading</li>
+        <li>There's a lot of cool stuff now available without plugins</li>
+        <li>This was an easy intro and small sample</li>
+        <li>Major caveat: browser support can differ</li>
       </ul>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Useful links</h2>
-    </hgroup>
-    <article>
+      <p>Useful links:</p>
       <ul>
         <li><a href="http://www.html5rocks.com/">HTML5 Rocks</a></li>
-        <li><a href="http://danpresos.appspot.com/HTML5CssResponsive/index.html">These slides</a></li>
+        <li><a href="http://www.caniuse.com/">Can I use?</a></li>
+        <li><a href="http://danpresos.appspot.com/HTML5CssResponsive/index.html">These slides</a></li
       </ul>
     </article>
   </slide>
