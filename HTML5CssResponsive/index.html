@@ -293,7 +293,6 @@ var input = element.querySelector('input[type=file]');
     </article>
   </slide>
 
-
   <slide>
     <hgroup>
       <h2>New element: canvas</h2>
@@ -317,12 +316,28 @@ ctx.drawImage(someImage, 0, 0);
 
   <slide>
     <hgroup>
+      <h2>New features</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>We saw datalist, progress and canvas</p>
+      <p>There are many more, like</p>
+      <ul>
+        <li>Data attributes: <code>&lt;div class="entry" data-entryId="1234"&gt;</code></li>
+        <li>Input element types: <code>&lt;input type="text|number|email|tel" /&gt;</code>
+        <li>Inline SVG: <code>&lt;svg&gt;...&lt;/svg&gt;</code>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
       <h2>New API: Geolocation</h2>
     </hgroup>
     <article>
 <pre class="prettyprint" data-lang="javascript">
 if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+  navigator.geolocation.getCurrentPosition(
+    successFunction, errorFunction, {timeout: 5000});
 } else {
   console.log('Geolocation is not supported.');
 }
@@ -382,6 +397,21 @@ if (window.FileReader) {
       <input type="file" accept="image/png" capture="camera" id="fileupload" name="myFile" onchange="previewPicture();" style="display: none;" />
     </p>
     <p id="fileData"></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>New features</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>We saw Geolocation, Local Storage and File API</p>
+      <p>There are many more, like</p>
+      <ul>
+        <li>WebSockets: <code>var socket = new WebSocket('ws://someUrl');</code> - connect to a WebSocket server</li>
+        <li>WebSQL: <code>var db = window.openDatabase(name, version, description, size);</code> - create or open an sql-like database client-side</li>
+        <li>Offline support: <code>&lt;html manifest="mymanifest"&gt;</code> - instructs what to cache</li>
+      </ul>
     </article>
   </slide>
 
@@ -485,27 +515,89 @@ document.querySelector('#movingBox').style['-moz-transform'] = 'rotateX(45deg)';
     </article>
   </slide>
 
+  <slide>
+    <hgroup>
+      <h2>New features</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>We saw Web Fonts, Rounded Corners, Transitions and Transforms</p>
+      <p>There are many more, like</p>
+      <ul>
+        <li>Selectors: <code>input[type="text"]</code> - select input elements with the attribute type set to text</li>
+        <li>Selectors: <code>tr:nth-child(even)</code> - select even-numbered table rows</li>
+        <li>Selectors: <code>div:not(.someClass)</code> - select div elements with class other than someClass</li>
+        <li>Shadows: <code>text-shadow</code> and <code>box-shadow</code> - drop shadow for text and boxes</li>
+      </ul>
+    </article>
+  </slide>
 
   <slide>
     <hgroup>
       <h2>Responsive Design</h2>
     </hgroup>
     <article>
+      <p>The problem</p>
       <ul>
-        <li>Write one set of content</li>
-        <li>Adapt your pages to the user agent with CSS</li>
-        <li>Use media queries</li>
-        <li>Use relative sizes (widths, font sizes, etc.)</li>
-        <li>Develop with the most constrained environment in-mind (mobile first)</li>
+        <li>Many devices, many screen sizes (the 4-screen world)</li>
+        <li>You want your site to display properly across devices</li>
       </ul>
+      <p>You have some options</p>
+      <ul>
+        <li>Write a different site or sub-site for mobile</li>
+        <li>Write one site and adapt to the user agent</li>
+      </ul>
+      <p>Adapting to the user agent</p>
+      <ul>
+        <li>You could detect the dimensions of the screen and show/hide content</li>
+        <li>You could use media queries</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Media Queries</h2>
+    </hgroup>
+    <article>
 <pre class="prettyprint" data-lang="css">
-@media screen and (min-width: 320px) and (max-width: 479px) {
+@media only screen and (min-width: 320px) and (max-width: 479px) {
   /* Screen is 320-480px wide */
 }
-@media screen and (min-width: 480px) {
+@media only screen and (min-width: 480px) {
   /* Screen is more than 480px wide */
 }
 </pre>
+      <p>You can apply style based on a number of criteria</p>
+      <ul>
+        <li><code>min-resolution</code></li>
+        <li><code>orientation</code></li>
+        <li><code>min-device-pixel-ratio</code></li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Some pointers</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Use relative sizes (% widths, font sizes in em)</li>
+        <li>Develop with the most constrained environment in-mind (mobile first)</li>
+        <li>Constrain the viewport (disable zooming) like this:</li>
+      </ul>
+        <pre class="prettyprint" data-lang="html">
+&lt;meta name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1"&gt;
+        </pre>
+      <ul>
+        <li>Commonly targeted sizes
+          <ul>
+            <li>320px, 480px, 600px, 768px, 900px, 1200px</li>
+          </ul>
+        </li>
+        <li>Make sure the browser supports a feature before using it</li>
+      </ul>
     </article>
   </slide>
 
@@ -516,13 +608,15 @@ document.querySelector('#movingBox').style['-moz-transform'] = 'rotateX(45deg)';
     <article>
       <ul>
         <li>There's a lot of cool stuff now available without plugins</li>
+        <li>New HTML5 elements, new Javascript APIs and new CSS3 capabilities</li>
         <li>This was an easy intro and small sample</li>
         <li>Major caveat: browser support can differ</li>
       </ul>
       <p>Useful links:</p>
       <ul>
-        <li><a href="http://www.html5rocks.com/">HTML5 Rocks</a></li>
-        <li><a href="http://www.caniuse.com/">Can I use?</a></li>
+        <li><a href="http://www.html5rocks.com">HTML5 Rocks</a></li>
+        <li><a href="http://www.caniuse.com">Can I use?</a></li>
+        <li><a href="http://www.mediaqueri.es">Mediaqueri.es</a></li>
         <li><a href="http://danpresos.appspot.com/HTML5CssResponsive/index.html">These slides</a></li
       </ul>
     </article>
