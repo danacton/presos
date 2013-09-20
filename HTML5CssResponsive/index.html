@@ -103,9 +103,19 @@ URL: https://code.google.com/p/io-2012-slides
 
         window.localStorage.setItem('shoppingList', list);
         outputElt.innerHTML = 'Thanks, added.';
+        document.querySelector('#shoppingItem').value = '';
+        showShoppingList();
       } else {
         outputElt.innerHTML = 'Local Storage is not supported';
       }
+    }
+
+    function checkEnter(elt, event) {
+      if (event.charCode === 13) {
+        addItemToShoppingList();
+        return false;
+      }
+      return true;
     }
 
     // Read an item in Local Storage and write the result to an element
@@ -166,6 +176,29 @@ URL: https://code.google.com/p/io-2012-slides
     function changeProgress(val) {
       document.querySelector('#progressBar').value += val;
     }
+
+    // Change the colour of an element
+    function toggleColour() {
+      var curColour = document.querySelector('#movingBox').style.background;
+      if (curColour == 'blue') {
+        curColour = 'red';
+      } else {
+        curColour = 'blue';
+      }
+      document.querySelector('#movingBox').style.background = curColour;
+    }
+
+    // Change the colour of an element
+    function toggleSize() {
+      var curSize = document.querySelector('#movingBox').style.width;
+      if (curSize == '100px') {
+        curSize = '50px';
+      } else {
+        curSize = '100px';
+      }
+      document.querySelector('#movingBox').style.width = curSize;
+    }
+
   </script>
 </head>
 <body style="opacity: 0">
@@ -282,13 +315,16 @@ var input = element.querySelector('input[type=file]');
     </hgroup>
     <article>
     <pre class="prettyprint" data-lang="html">
-&lt;progress value="0" max="100"&gt;&lt;/progress&gt;
+&lt;progress value="0" id="progressBar" max="100"&gt;&lt;/progress&gt;
+    </pre>
+    <pre class="prettyprint" data-lang="javascript">
+document.querySelector('#progressBar').value += 10;
     </pre>
       <p>Example</p>
       <p>
+        <input type="button" value="-" onclick="changeProgress(-10)" />
         <progress id="progressBar" value="0" max="100"></progress>
-        <input type="button" value="Increase" onclick="changeProgress(10)" />
-        <input type="button" value="Decrease" onclick="changeProgress(-10)" />
+        <input type="button" value="+" onclick="changeProgress(10)" />
       <p>
     </article>
   </slide>
@@ -307,7 +343,7 @@ var ctx = c.getContext('2d');
 ctx.drawImage(someImage, 0, 0);
     </pre>
       <p>Example</p>
-      <p>To change the picture, load an image on slide 11</p>
+      <p>To change the picture, load an image on slide 12</p>
       <p>
         <canvas id="canvas" width="320" height="240" style="border: 1px solid black;"></canvas>
       <p>
@@ -363,7 +399,7 @@ if (window.localStorage) {
 </pre>
     <p>Example</p>
     <p>
-      <input type="text" id="shoppingItem" />
+      <input type="text" id="shoppingItem" onkeypress="return checkEnter(this, event)" />
       <input type="button" value="Add to shopping list" onclick="addItemToShoppingList()" />
       <input type="button" value="Show shopping list" onclick="showShoppingList()" />
       <input type="button" value="Clear shopping list" onclick="clearShoppingList()" />
@@ -482,8 +518,10 @@ p {
 document.querySelector('#movingBox').style.background = 'blue';
 document.querySelector('#movingBox').style.width = '100px';
       </pre>
-<input type="button" onclick="document.querySelector('#movingBox').style.background = 'blue';" value="Change colour" />
-<input type="button" onclick="document.querySelector('#movingBox').style.width = '100px';" value="Change size" />
+      <p>
+<input type="button" onclick="toggleColour();" value="Toggle colour" />
+<input type="button" onclick="toggleSize();" value="Toggle size" />
+      </p>
 <div id="movingBox">&nbsp;</div>
     </article>
   </slide>
@@ -508,9 +546,11 @@ document.querySelector('#movingBox').style.width = '100px';
       <pre class="prettyprint" data-lang="javascript">
 document.querySelector('#movingBox').style['-moz-transform'] = 'rotateX(45deg)';
       </pre>
+      <p>
 <input type="button" onclick="rotate('45deg', 'X');" value="Rotate X" />
 <input type="button" onclick="rotate('45deg', 'Y');" value="Rotate Y" />
 <input type="button" onclick="rotate('45deg', 'Z');" value="Rotate Z" />
+      </p>
 <div id="movingBox2">&nbsp;</div>
     </article>
   </slide>
@@ -544,11 +584,12 @@ document.querySelector('#movingBox').style['-moz-transform'] = 'rotateX(45deg)';
       <p>You have some options</p>
       <ul>
         <li>Write a different site or sub-site for mobile</li>
-        <li>Write one site and adapt to the user agent</li>
+        <li>Write one site and adapt to the screen size</li>
       </ul>
-      <p>Adapting to the user agent</p>
+      <p>Adapting to the screen size</p>
       <ul>
         <li>You could detect the dimensions of the screen and show/hide content</li>
+        <li>You could size things based on screen size</li>
         <li>You could use media queries</li>
       </ul>
     </article>
