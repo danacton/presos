@@ -18,5 +18,8 @@ handlers:
 - url: /HTML5CssResponsive
   static_dir: HTML5CssResponsive
 
+- url: /IntroToAppEngine
+  static_dir: IntroToAppEngine
+
 - url: /.*
   script: danpresos.application
