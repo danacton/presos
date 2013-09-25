@@ -1,0 +1,688 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+         Daniel Acton <code@danielacton.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google App Engine 101</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+  <style>
+    .italic {
+      font-style: italic;
+    }
+#movingBox {
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+
+  background: red;
+  height: 50px;
+  width: 50px;
+}
+#movingBox2 {
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+
+  background: red;
+  height: 50px;
+  width: 50px;
+}
+.roundedButton {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  border: 1px solid #bbb;
+  background: #c0c0c0;
+}
+.unroundedButton {
+  border-radius: 0px;
+  -moz-border-radius: 0px;
+  border: 1px solid #bbb;
+  background: #c0c0c0;
+}
+#shoppingList, #locationData {
+  font-size: 1em;
+}
+
+  </style>
+  <script>
+    // Rotate a particular element
+    function rotate(amt, axis) {
+      var fn = 'rotate' + axis;
+      document.querySelector('#movingBox2').style['transform'] = fn + '(' + amt + ')';
+      document.querySelector('#movingBox2').style['-o-transform'] = fn + '(' + amt + ')';
+      document.querySelector('#movingBox2').style['-webkit-transform'] = fn + '(' + amt + ')';
+      document.querySelector('#movingBox2').style['-moz-transform'] = fn + '(' + amt + ')';
+    }
+
+    // Geolocate the user and update an element with the output
+    function geolocateMe() {
+      var posElt = document.querySelector('#locationData');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            posElt.innerHTML = 'Position is (' + position.coords.latitude + ', ' + position.coords.longitude + ')';
+          }, function(error) {
+            posElt.innerHTML = 'Failed to get current location';
+          },
+          {timeout:5000});
+      }
+      else {
+        posElt.innerHTML = 'Location not supported';
+      }
+    }
+
+    // Store an item in Local Storage and write the result to an element
+    function addItemToShoppingList() {
+      var item = document.querySelector('#shoppingItem').value;
+      var outputElt = document.querySelector('#shoppingList');
+
+      if (window.localStorage) {
+        var list = window.localStorage.getItem('shoppingList');
+        if (!list || list.length == 0) {
+          list = item;
+        } else {
+          list = list + '<br/>' + item;
+        }
+
+        window.localStorage.setItem('shoppingList', list);
+        outputElt.innerHTML = 'Thanks, added.';
+        document.querySelector('#shoppingItem').value = '';
+        showShoppingList();
+      } else {
+        outputElt.innerHTML = 'Local Storage is not supported';
+      }
+    }
+
+    function checkEnter(elt, event) {
+      if (event.charCode === 13) {
+        addItemToShoppingList();
+        return false;
+      }
+      return true;
+    }
+
+    // Read an item in Local Storage and write the result to an element
+    function showShoppingList() {
+      var outputElt = document.querySelector('#shoppingList');
+
+      if (window.localStorage) {
+        var list = window.localStorage.getItem('shoppingList');
+        if (!list || list.length == 0) {
+          outputElt.innerHTML = 'List is empty.';
+        } else {
+          outputElt.innerHTML = list;
+        }
+
+      } else {
+        outputElt.innerHTML = 'Local Storage is not supported';
+      }
+    }
+
+    // Clear an item in Local Storage and write the result to an element
+    function clearShoppingList() {
+      var outputElt = document.querySelector('#shoppingList');
+
+      if (window.localStorage) {
+        window.localStorage.removeItem('shoppingList');
+        outputElt.innerHTML = 'Cleared.';
+      } else {
+        outputElt.innerHTML = 'Local Storage is not supported';
+      }
+    }
+
+    // Preview an image file uploaded by the user in a canvas
+    function previewPicture() {
+      var outputElt = document.querySelector('#fileData');
+      var input = document.querySelector('input[type=file]');
+      var file = input.files[0];
+      if (window.FileReader) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          var dataURL = e.target.result;
+          var c = document.getElementById('canvas');
+          var ctx = c.getContext('2d');
+          var img = document.createElement('img');
+          img.src = dataURL;
+          img.border = '1';
+          ctx.drawImage(img, 0, 0);
+          outputElt.innerHTML = '<a href="' + dataURL + '">Click here to see the image</a> (and look on slide 8)';
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        outputElt.innerHTML = 'FileReader API not supported';
+      }
+    }
+
+    // Update a progress indicator
+    function changeProgress(val) {
+      document.querySelector('#progressBar').value += val;
+    }
+
+    // Change the colour of an element
+    function toggleColour() {
+      var curColour = document.querySelector('#movingBox').style.background;
+      if (curColour == 'blue') {
+        curColour = 'red';
+      } else {
+        curColour = 'blue';
+      }
+      document.querySelector('#movingBox').style.background = curColour;
+    }
+
+    // Change the colour of an element
+    function toggleSize() {
+      var curSize = document.querySelector('#movingBox').style.width;
+      if (curSize == '100px') {
+        curSize = '50px';
+      } else {
+        curSize = '100px';
+      }
+      document.querySelector('#movingBox').style.width = curSize;
+    }
+
+  </script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/logo-gcdc.png"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google Cloud Platform</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Google App Engine - Host your applications</li>
+        <li>Google Compute Engine - Host your Virtual Machines</li>
+        <li>Google Cloud Storage - Host your files</li>
+        <li>Google Cloud SQL - Host your databases</li>
+        <li>Google BigQuery - Analyze data</li>
+        <li>Google Cloud Datastore - No-SQL database in the cloud</li>
+        <li>Details at <a href="http://cloud.google.com">cloud.google.com</a></li>
+      </ul>
+      <p class="flexbox vcenter">
+        <img style="width: 800px" src='images/cloud-products.png'>
+      </p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Google App Engine?</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>PaaS (Platform as a Service)</li>
+        <li><b>A web application platform</b>
+          <ul>
+            <li>Create applications in Java, Python, Go or PHP</li>
+            <li>Store data in the cloud</li>
+          </ul>
+        </li>
+        <li><b>A set of APIs, including</b>
+          <ul>
+            <li>Data Storage</li>
+            <li>Task Queues</li>
+            <li>Users</li>
+          </ul>
+        </li>
+        <li><b>Easy to</b>
+          <ul>
+            <li>Build and Deploy</li>
+            <li>Manage</li>
+            <li>Scale</li>
+          </ul>
+        </li>
+        <li>Details at <a href="http://developers.google.com/appengine">developers.google.com/appengine</a></li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Developing with Google App Engine</h2>
+    </hgroup>
+    <article>
+      <p>You focus on building awesome web applications, App Engine does the rest</p>
+      <p>Always remember: <a href="https://developers.google.com/appengine">developers.google.com/appengine</a></p>
+      <p>Four easy steps</p>
+      <ul class="build">
+        <li>Step 1: Get the Google App Engine SDK</li>
+        <li>Step 2: Write code</li>
+        <li>Step 3: Test locally</li>
+        <li>Step 4: Deploy to App Engine</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>The Google App Engine SDK</h2>
+    </hgroup>
+    <article>
+      <p>The SDK contains:</p>
+      <ul>
+        <li>Libraries for the many APIs the platform provides
+          <ul>
+            <li>Get it <a href="https://developers.google.com/appengine/downloads">here</a></li>
+            <li>For Java, there is an Eclipse plugin</li>
+          </ul>
+        </li>
+        <li>Utilities to deploy locally (Local Dev Server) and to your App Engine instance</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>A Google App Engine application</h2>
+    </hgroup>
+    <article>
+      <p>Your application can be written in</p>
+      <ul>
+        <li>Java</li>
+        <li>Python</li>
+        <li>Go (*)</li>
+        <li>PHP (*)</li>
+      </ul>
+      <p>Your application will execute in a sandbox</p>
+      <ul>
+        <li>More secure</li>
+        <li>More scalable</li>
+        <li>More distributable</li>
+      </ul>
+      <footer class="source">(*) Experimental</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>The sandbox</h2>
+    </hgroup>
+    <article>
+      <p>The sandbox aims to make it better for everyone</p>
+      <ul>
+        <li>Applications don't interfere with each other </li>
+        <li>Applications don't rely on machine-specific resources (e.g. filesystem)</li>
+      </ul>
+      <p>Restrictons vary per language, but generally</p>
+      <ul>
+        <li>No filesystem access (use Datastore to persist data)</li>
+        <li>No opening sockets (use URLFetch to make HTTP/HTTPS requests)</li>
+        <li>Complete a web request in &lt; 60 seconds (return fast, use Tasks)</li>
+        <li>No system calls</li>
+      </ul>
+      <footer class="source">(*) Experimental</footer>
+    </article>
+  </slide>
+
+
+  <slide>
+    <hgroup>
+      <h2>Java</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Implement servlets and JSPs</li>
+        <li>Support for Java 6 or Java 7</li>
+        <li>The Java App Engine environment supports a subset of the JRE libraries</li>
+        <li>IDE Plugins for
+          <ul>
+            <li>Eclipse (Google-supported)</li>
+            <li>Netbeans</li>
+            <li>IntelliJ</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Anatomy of a (Java) web application</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Project Root
+          <ul>
+            <li><code>src/</code>
+              <ul>
+                <li>Source code goes here</li>
+              </ul>
+            </li>
+            <li><code>war/</code>
+              <ul>
+                <li>Static files go here</li>
+                <li><code>index.html</code></li>
+                <li><code>style/</code></li>
+                <li><code>js/</code></li>
+              </ul>
+              <ul>
+                <li><code>WEB-INF/</code>
+                  <ul>
+                    <li><code>web.xml</code> - Servlet configuration</li>
+                    <li><code>appengine-web.xml</code> - App Engine configuration</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Python</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Applications can use any WSGI-compatible web application framework</li>
+        <li>webapp2 is included in the runtime</li>
+        <li>Support for Python 2.5 (deprecated) and 2.7</li>
+        <li>Supports some useful libraries (Django, Jinja, etc.)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>PHP</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>PHP 5.4 runtime</li>
+        <li>&gt; 35 extensions enabled</li>
+        <li>Supports some useful libraries (Django, Jinja, etc.)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Go</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Support for Go v1</li>
+        <li>Use the Go http package</li>
+        <li>Writing App Engine apps is the same as writing stand-along Go web servers</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Anatomy of a (Python|PHP|Go) web application</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Project Root
+          <ul>
+            <li><code>app.yaml</code> - App Engine configuration</li>
+            <li>Source code</li>
+            <li>Static files</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Storing data</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Datastore
+          <ul>
+            <li>Schema-less, NoSQL database</li>
+            <li>You define entities with properties</li>
+            <li>Max of 1MB per entity</li>
+          </ul>
+        </li>
+        <li>Blobstore
+          <ul>
+            <li>Store large amounts of data</li>
+          </ul>
+        </li>
+        <li>Google Cloud SQL
+          <ul>
+            <li>MySQL database in the cloud</li>
+            <li>Uses the familiar MySql client</li>
+          </ul>
+        </li>
+        <li>Google Cloud Storage
+          <ul>
+            <li>Cloud-based file-system</li>
+            <li>ACLs</li>
+            <li>Resume functionality</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google App Engine Services</h2>
+    </hgroup>
+    <article>
+      <p>Support differs per language</p>
+      <p>Free quota and then start paying</p>
+      <ul>
+        <li>URL Fetch
+          <ul>
+            <li>Make an HTTP/S request</li>
+            <li>Use normal lanuage-specific approach, e.g. java.net.URL.openStream</li>
+          </ul>
+        <li>Task Queues
+          <ul>
+            <li>Defer longer tasks</li>
+            <li>Task has 10 minutes to complete</li>
+          </ul>
+        <li>Memcache
+          <ul>
+            <li>Store key/value pairs in memory</li>
+            <li>1MB data limit per entry)</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google App Engine Services</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Users
+          <ul>
+            <li>Authenticate users</li> 
+            <li>Use their Google account (incl. Google Apps accounts) or OpenID(*)</li>
+          </ul>
+        </li>
+        <li>Logs
+          <ul>
+            <li>Access logs data from your application</li> 
+            <li>Request logs - contains data about each HTTP/S request</li>
+            <li>Application logs - contains messages you log from your application</li>
+          </ul>
+        </li>
+      </ul>
+      <footer class="source">The authentication choice is made when you setup the application and cannot be changed later. OpenID support is experimental.</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Testing your application locally</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>SDK: Use <code>dev_appserver.sh</code></li>
+        <li>Eclipse: Run or debug as Web Application</li>
+        <li>Management console similar to production</li>
+        <li>Acts like App Engine with small differences
+          <ul>
+            <li>Datastore is a local file</li>
+            <li>User service is mocked</li>
+            <li>URL Fetch is from your computer</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Deploying to App Engine</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>SDK: Use <code>appcfg.sh</code></li>
+        <li>Eclipse: Deploy to App Engine</li>
+        <li>The SDK will package your application and update it</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Google App Engine Management Console</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Visit appengine.google.com</li>
+        <li>Perform many admin functions
+          <ul>
+            <li>Manage applications and instances</li>
+            <li>View Logs</li>
+            <li>View Data (Datastore, Blobstore</li>
+            <li>Manage versions</li>
+            <li>Manage Task Queues</li>
+            <li>View detailed quota-usage information</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Some pointers</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Read fast, write slow
+          <ul>
+            <li>Use memcache for common data</li>
+            <li>Defer writing of data with Task Queue</li>
+          </ul>
+        </li>
+        <li>Normalise your data
+          <ul>
+            <li>Decrease the number of join-like queries to Datastore</li>
+            <li>In your entity, use a list of objects for a parent-child relationship</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Summary</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Google App Engine is really easy to get started with</li>
+        <li>The documentation is excellent (examples to help you get started)</li>
+      </ul>
+      <p>Useful links:</p>
+      <ul>
+        <li><a
+        href="http://danpresos.appspot.com/IntroToAppEngine/index.html">These slides</a></li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/logo-gcdc-small.png"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>&lt;Thank You!&gt;</h2>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/logo-gcdc.png"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3160417-5']);
+  _gaq.push(['_setDomainName', 'danpresos.appspot.com']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
