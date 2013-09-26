@@ -290,6 +290,14 @@ URL: https://code.google.com/p/io-2012-slides
     </article>
   </slide>
 
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Get the Google App Engine SDK</h2>
+      <h3>The base for your application</h3>
+    </hgroup>
+  </slide>
+
   <slide>
     <hgroup>
       <h2>The Google App Engine SDK</h2>
@@ -306,6 +314,14 @@ URL: https://code.google.com/p/io-2012-slides
         <li>Utilities to deploy locally (Local Dev Server) and to your App Engine instance</li>
       </ul>
     </article>
+  </slide>
+
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Write some code</h2>
+      <h3>Use the SDK libraries to build your application</h3>
+    </hgroup>
   </slide>
 
   <slide>
@@ -429,7 +445,6 @@ URL: https://code.google.com/p/io-2012-slides
       <ul>
         <li>PHP 5.4 runtime</li>
         <li>&gt; 35 extensions enabled</li>
-        <li>Supports some useful libraries (Django, Jinja, etc.)</li>
       </ul>
     </article>
   </slide>
@@ -520,7 +535,7 @@ URL: https://code.google.com/p/io-2012-slides
         <li>Memcache
           <ul>
             <li>Store key/value pairs in memory</li>
-            <li>1MB data limit per entry)</li>
+            <li>1MB data limit per entry</li>
           </ul>
         </li>
       </ul>
@@ -551,13 +566,21 @@ URL: https://code.google.com/p/io-2012-slides
     </article>
   </slide>
 
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Test your application locally</h2>
+      <h3>Run your code in a development application server</h3>
+    </hgroup>
+  </slide>
+
   <slide>
     <hgroup>
       <h2>Testing your application locally</h2>
     </hgroup>
     <article>
       <ul>
-        <li>SDK: Use <code>dev_appserver.sh</code></li>
+        <li>SDK: Use <code>dev_appserver.py</code></li>
         <li>Eclipse: Run or debug as Web Application</li>
         <li>Management console similar to production</li>
         <li>Acts like App Engine with small differences
@@ -571,15 +594,24 @@ URL: https://code.google.com/p/io-2012-slides
     </article>
   </slide>
 
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Deploy to App Engine</h2>
+      <h3>It works! Let's go!</h3>
+    </hgroup>
+  </slide>
+
   <slide>
     <hgroup>
       <h2>Deploying to App Engine</h2>
     </hgroup>
     <article>
       <ul>
-        <li>SDK: Use <code>appcfg.sh</code></li>
+        <li>SDK: Use <code>appcfg.py</code></li>
         <li>Eclipse: Deploy to App Engine</li>
         <li>The SDK will package your application and update it</li>
+        <li>You'll need to create an App Engine account first and create an Application ID</li>
       </ul>
     </article>
   </slide>
@@ -609,18 +641,32 @@ URL: https://code.google.com/p/io-2012-slides
     <hgroup>
       <h2>Some pointers</h2>
     </hgroup>
-    <article>
+    <article class="smaller">
       <ul>
         <li>Read fast, write slow
           <ul>
             <li>Use memcache for common data</li>
             <li>Defer writing of data with Task Queue</li>
+            <li>Think about indexes on your data</li>
           </ul>
         </li>
         <li>Normalise your data
           <ul>
             <li>Decrease the number of join-like queries to Datastore</li>
             <li>In your entity, use a list of objects for a parent-child relationship</li>
+          </ul>
+        </li>
+        <li>If you're using Java
+          <ul>
+            <li>Use JDO/JPA to make entity persistence simpler</li>
+          </ul>
+        </li>
+        <li>If you can, use Google Cloud Endpoints
+          <ul>
+            <li>Python and Java only</li>
+            <li>Create an API to manage your entities</li>
+            <li>The SDK generates libraries for iOS, Android and Javascript</li>
+            <li>Single API for different consumers</li>
           </ul>
         </li>
       </ul>
@@ -638,8 +684,9 @@ URL: https://code.google.com/p/io-2012-slides
       </ul>
       <p>Useful links:</p>
       <ul>
-        <li><a
-        href="http://danpresos.appspot.com/IntroToAppEngine/index.html">These slides</a></li>
+        <li><a href="https://developers.google.com/appengine">The App Engine documentation</a></li>
+        <li><a href="http://danpresos.appspot.com/AppEngine101/index.html">A quickstart guide for App Engine Java</a></li>
+        <li><a href="http://danpresos.appspot.com/IntroToAppEngine/index.html">These slides</a></li>
       </ul>
     </article>
   </slide>
