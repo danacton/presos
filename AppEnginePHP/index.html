@@ -1,0 +1,241 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+         Daniel Acton <code@danielacton.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google App Engine 101</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/logo-gcdc.png"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>PHP on Google App Engine</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>App Engine supports PHP 5.4</li>
+        <li>Over 35 built-in extensions</li>
+        <li>Familiar MySQL database interactions</li>
+        <li>Must be pure PHP, no custom C libraries</li>
+        <li>Support for Google Cloud SQL and Google Cloud Storage</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Getting started</h2>
+    </hgroup>
+    <article>
+      <p>To setup your development environment:</p>
+      <ul>
+        <li>Install Python 2.7 (required for SDK tools)</li>
+        <li>Install PHP 5.4 (the php-cgi binary is required)</li>
+        <li>Install the Google App Engine SDK for PHP</li>
+        <li>Install the MySQL server (required for local testing)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Creating a PHP application</h2>
+    </hgroup>
+    <article class="smaller">
+      <ul>
+        <li>Create a directory for your application</li>
+        <li>Create an <code>app.yaml</code> file (your app config)
+          <ul>
+            <li>Maps URLs to files in your application</li>
+            <li>This sample has a static <code>images</code> directory and a single PHP called on access of any URL</li>
+            <li>The <code>application</code> item is the application ID in App Engine</li>
+          </ul>
+        </li>
+      </ul>
+      <pre class="prettyprint" data-lang="yaml">
+application: helloworld-php
+version: 1
+runtime: php
+api_version: 1
+
+handlers:
+- url: /images
+  static_dir: images
+
+- url: /.*
+  script: index.php
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Writing the PHP code</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Create some PHP files, and map them in your <code>app.yaml</code></li>
+        <li>The sample snippet below just prints a message based on the time</li>
+      </ul>
+      <pre class="prettyprint" data-lang="php">
+&lt;?
+  print('&lt;p&gt;Hello GAE-PHP world!&lt;/p&gt;');
+  if (time() % 2 == 0) {
+    print('&lt;p&gt;You visited on an even-numbered second since epoch&lt;/p&gt;');
+  } else {
+    print('&lt;p&gt;You visited on an odd-numbered second since epoch&lt;/p&gt;');
+  }
+?&gt;
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Test your application locally</h2>
+    </hgroup>
+    <article class="smaller">
+      <ul>
+        <li>Run the development application server</li>
+      </ul>
+      <pre class="prettyprint">
+dev_appserver.py --php_executable_path=&lt;path to php-cgi&gt; &lt;path to application directory&gt;
+      </pre>
+      <ul>
+        <li>Visit <a href="http://localhost:8080">localhost:8080</a> in your browser</li>
+      </ul>
+      <ul>
+        <li>If you're using Cloud SQL
+          <ul>
+            <li>Make sure MySQL is started locally</li>
+            <li>Set the database host in your code based on whether the app is running locally or live</li>
+          </ul>
+        </li>
+      </ul>
+      <pre class="prettyprint" data-lang="php">
+if (isset($_SERVER['SERVER_SOFTWARE']) &amp;&amp;
+  strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
+    // Set to the CloudSQL Host spec
+  } else {
+    // Set to localhost
+  }
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Deploy to App Engine</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Create an App Engine application</li>
+        <li>Set the application ID to match what's in <code>app.yaml</code></li>
+        <li>Right now, you'll need to have your account whitelisted for PHP deployment</li>
+      </ul>
+      <pre class="prettyprint">
+appcfg.py update &lt;path to application directory&gt;
+      </pre>
+      <ul>
+        <li>Visit <a href="#"><em style="font-style: italic">yourappid</em>.appspot.com</a> in your browser</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Summary</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Once you're set up for PHP on App Engine development, it's quick and easy to iterate</li>
+        <li>The documentation is excellent (examples to help you get started)</li>
+      </ul>
+      <p>Useful links:</p>
+      <ul>
+        <li><a href="https://developers.google.com/appengine/docs/php/">The App Engine documentation for PHP</a></li>
+        <li><a href="http://danpresos.appspot.com/IntroToAppEngine/index.html">An introduction to Google App Engine </a></li>
+        <li><a href="http://danpresos.appspot.com/AppEngine101/index.html">A quickstart guide for App Engine Java</a></li>
+        <li><a href="http://danpresos.appspot.com/AppEnginePHP/index.html">These slides</a></li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/logo-gcdc-small.png"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>&lt;Thank You!&gt;</h2>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/logo-gcdc.png"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3160417-5']);
+  _gaq.push(['_setDomainName', 'danpresos.appspot.com']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
