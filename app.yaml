@@ -21,5 +21,11 @@ handlers:
 - url: /IntroToAppEngine
   static_dir: IntroToAppEngine
 
+- url: /AppEnginePHP
+  static_dir: AppEnginePHP
+
+- url: /AppEngineForStartups
+  static_dir: AppEngineForStartups
+
 - url: /.*
   script: danpresos.application

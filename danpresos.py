@@ -20,10 +20,13 @@ MAIN_PAGE_HTML = """\
   <body>
     <h1>Dan's presentations</h1>
     <ul>
-      <li><a href="/namekeepr/index.html">namekeepr: an example application (Scaleconf April 2013, Google I/O Extended May 2013)</a></li>
-      <li><a href="/AppEngine101/index.html">Google App Engine 101 (July 2013)</a></li>
-      <li><a href="/AppEngine201/index.html">Google App Engine 201 (August 2013)</a></li>
-      <li><a href="/HTML5CssResponsive/index.html">Google Cloud Developer Challenge tutorial HTML5, CSS3 and Responsive DEsign(September 2013)</a></li>
+      <li><b><a href="/namekeepr/index.html">namekeepr: an example application</a></b> (<a href="http://www.scaleconf.org">Scaleconf</a> April 2013, Google I/O Extended May 2013)</li>
+      <li><b><a href="/AppEngine101/index.html">Google App Engine 101</a></b> (<a href="https://developers.google.com/groups/chapter/106505752730493822675/">Wits Google Developer Group</a>, July 2013)</li>
+      <li><b><a href="/AppEngine201/index.html">Google App Engine 201</a></b> (<a href="https://developers.google.com/groups/chapter/106505752730493822675/">Wits Google Developer Group</a>, August 2013)</li>
+      <li><b><a href="/HTML5CssResponsive/index.html">HTML5, CSS3 and Responsive Design</a></b> (<a href="http://www.google.com/events/gcdc2013/">Google Cloud Developer Challenge</a>, September 2013)</li>
+      <li><b><a href="/IntroToAppEngine/index.html">Introduction to App Engine</a></b> (<a href="http://www.google.com/events/gcdc2013/">Google Cloud Developer Challenge</a>, September 2013)</li>
+      <li><b><a href="/AppEnginePHP/index.html">A quick start guid to PHP on App Engine</a></b> (<a href="http://www.google.com/events/gcdc2013/">Google Cloud Developer Challenge</a>, September 2013)</li>
+      <li><b><a href="/AppEngineForStartups/index.html">App Engine for startups</a></b> (<a href="http://www.88mph.ac/">88mph</a> Nairobi Startup Bootcamp, October 2013)</li>
   </body>
 </html>
 """

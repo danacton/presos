@@ -45,16 +45,59 @@ URL: https://code.google.com/p/io-2012-slides
 
   <slide>
     <hgroup>
+      <h2>So you're a startup ...</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>You have a great idea</li>
+        <li>You want to get to a Minimum Viable Product (MVP) quickly</li>
+        <li>You'd like to spend your resources wisely
+          <ul>
+            <li><b>Money</b> - your MVP need not cost the earth</li>
+            <li><b>Human</b> - focus on creating not operating</li>
+            <li><b>Time</b> - spend time doing rather than configuring</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Some of your technology options</h2>
+    </hgroup>
+    <article>
+      <p>Assuming you want to build a web application</p>
+      <p><b>Non-Cloud options</b></p>
+      <ul>
+        <li>Shared hosting</li>
+        <li>Server co-location</li>
+      </ul>
+      <p><b>Cloud options</b></p>
+      <ul>
+        <li><span class="green">IaaS</span> - you have to
+          <ul>
+            <li>install and maintain the operating system</li>
+            <li>install and maintain the software stack</li>
+            <li>write the software</li>
+          </ul>
+        <li><span class="green">PaaS</span> - you have to write the software</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
       <h2>Google Cloud Platform</h2>
     </hgroup>
     <article>
       <ul>
-        <li>Google App Engine - Host your applications</li>
-        <li>Google Compute Engine - Host your Virtual Machines</li>
-        <li>Google Cloud Storage - Host your files</li>
-        <li>Google Cloud SQL - Host your databases</li>
-        <li>Google BigQuery - Analyze data</li>
-        <li>Google Cloud Datastore - No-SQL database in the cloud</li>
+        <li><span class="green">Google App Engine</span> - Host your applications</li>
+        <li><span class="green">Google Compute Engine</span> - Host your Virtual Machines</li>
+        <li><span class="green">Google Cloud Storage</span> - Host your files</li>
+        <li><span class="green">Google Cloud SQL</span> - Host your databases</li>
+        <li><span class="green">Google BigQuery</span> - Analyze data</li>
+        <li><span class="green">Google Cloud Datastore</span> - No-SQL database in the cloud</li>
         <li>Details at <a href="http://cloud.google.com">cloud.google.com</a></li>
       </ul>
       <p class="flexbox vcenter">
@@ -67,7 +110,7 @@ URL: https://code.google.com/p/io-2012-slides
     <hgroup>
       <h2>What is Google App Engine?</h2>
     </hgroup>
-    <article>
+    <article class="smaller">
       <ul>
         <li>PaaS (Platform as a Service)</li>
         <li><b>A web application platform</b>
@@ -76,7 +119,7 @@ URL: https://code.google.com/p/io-2012-slides
             <li>Store data in the cloud</li>
           </ul>
         </li>
-        <li><b>A set of APIs, including</b>
+        <li><b>A set of APIs and services including</b>
           <ul>
             <li>Data Storage</li>
             <li>Task Queues</li>
@@ -97,60 +140,14 @@ URL: https://code.google.com/p/io-2012-slides
 
   <slide>
     <hgroup>
-      <h2>Developing with Google App Engine</h2>
-    </hgroup>
-    <article>
-      <p>You focus on building awesome web applications, App Engine does the rest</p>
-      <p>Always remember: <a href="https://developers.google.com/appengine">developers.google.com/appengine</a></p>
-      <p>Four easy steps</p>
-      <ul class="build">
-        <li>Step 1: Get the Google App Engine SDK</li>
-        <li>Step 2: Write code</li>
-        <li>Step 3: Test locally</li>
-        <li>Step 4: Deploy to App Engine</li>
-      </ul>
-    </article>
-  </slide>
-
-  <slide class="segue dark nobackground">
-    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
-    <hgroup class="auto-fadein">
-      <h2>Get the Google App Engine SDK</h2>
-      <h3>The base for your application</h3>
-    </hgroup>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>The Google App Engine SDK</h2>
-    </hgroup>
-    <article>
-      <p>The SDK contains:</p>
-      <ul>
-        <li>Libraries for the many APIs the platform provides
-          <ul>
-            <li>Get it <a href="https://developers.google.com/appengine/downloads">here</a></li>
-            <li>For Java, there is an Eclipse plugin</li>
-          </ul>
-        </li>
-        <li>Utilities to deploy locally (Local Dev Server) and to your App Engine instance</li>
-      </ul>
-    </article>
-  </slide>
-
-  <slide class="segue dark nobackground">
-    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
-    <hgroup class="auto-fadein">
-      <h2>Write some code</h2>
-      <h3>Use the SDK libraries to build your application</h3>
-    </hgroup>
-  </slide>
-
-  <slide>
-    <hgroup>
       <h2>A Google App Engine application</h2>
     </hgroup>
-    <article>
+    <article class="smaller">
+      <p>You get</p>
+      <ul>
+        <li>A domain - yourappname.appspot.com (can use your own too)</li>
+        <li>SSL included</li>
+      </ul>
       <p>Your application can be written in</p>
       <ul>
         <li>Java</li>
@@ -189,116 +186,102 @@ URL: https://code.google.com/p/io-2012-slides
     </article>
   </slide>
 
-
   <slide>
     <hgroup>
-      <h2>Java</h2>
+      <h2>How App Engine scales</h2>
     </hgroup>
     <article>
       <ul>
-        <li>Implement servlets and JSPs</li>
-        <li>Support for Java 6 or Java 7</li>
-        <li>The Java App Engine environment supports a subset of the JRE libraries</li>
-        <li>IDE Plugins for
-          <ul>
-            <li>Eclipse (Google-supported)</li>
-            <li>Netbeans</li>
-            <li>IntelliJ</li>
-          </ul>
-        </li>
+        <li>Most basic approach</li>
+        <li>Instances scale automatically as needed</li>
+        <li>You pay for more instances (after your free quota)</li>
       </ul>
+      <p class="flexbox vcenter">
+        <img style="width: 800px" src='images/gae-basic.png'>
+      </p>
     </article>
   </slide>
 
   <slide>
     <hgroup>
-      <h2>Anatomy of a (Java) web application</h2>
+      <h2>How App Engine scales</h2>
     </hgroup>
     <article>
       <ul>
-        <li>Project Root
-          <ul>
-            <li><code>src/</code>
-              <ul>
-                <li>Source code goes here</li>
-              </ul>
-            </li>
-            <li><code>war/</code>
-              <ul>
-                <li>Static files go here</li>
-                <li><code>index.html</code></li>
-                <li><code>style/</code></li>
-                <li><code>js/</code></li>
-              </ul>
-              <ul>
-                <li><code>WEB-INF/</code>
-                  <ul>
-                    <li><code>web.xml</code> - Servlet configuration</li>
-                    <li><code>appengine-web.xml</code> - App Engine configuration</li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+        <li>Multiple versions of your application</li>
+        <li>For SSL(*), use <code>v1-dot-myapp.appspot.com</code> instead</li>
       </ul>
+      <p class="flexbox vcenter">
+        <img style="width: 800px" src='images/gae-medium.png'>
+      </p>
+      <footer class="source">(*) Yes - you get SSL included!</footer>
     </article>
   </slide>
 
   <slide>
     <hgroup>
-      <h2>Python</h2>
+      <h2>How App Engine scales</h2>
     </hgroup>
     <article>
       <ul>
-        <li>Applications can use any WSGI-compatible web application framework</li>
-        <li>webapp2 is included in the runtime</li>
-        <li>Support for Python 2.5 (deprecated) and 2.7</li>
-        <li>Supports some useful libraries (Django, Jinja, etc.)</li>
+        <li>Multiple versions of your application</li>
+        <li>You break your application into multiple modules</li>
       </ul>
+      <p class="flexbox vcenter">
+        <img style="width: 800px" src='images/gae-big.png'>
+      </p>
     </article>
   </slide>
 
   <slide>
     <hgroup>
-      <h2>PHP</h2>
+      <h2>The life of an App Engine request</h2>
     </hgroup>
     <article>
-      <ul>
-        <li>PHP 5.4 runtime</li>
-        <li>&gt; 35 extensions enabled</li>
-      </ul>
+      <p class="flexbox vcenter">
+        <img style="width: 600px" src='images/gae-req.png'>
+      </p>
     </article>
   </slide>
 
   <slide>
     <hgroup>
-      <h2>Go</h2>
+      <h2>Summary</h2>
     </hgroup>
     <article>
       <ul>
-        <li>Support for Go v1</li>
-        <li>Use the Go http package</li>
-        <li>Writing App Engine apps is the same as writing stand-alone Go web servers</li>
+        <li>Google App Engine is PaaS - you just write the application</li>
+        <li>You have a choice of programming languages</li>
+        <li>It's easy to get started simply</li>
+        <li>App Engine automatically scales to meet the request demand</li>
+        <li>You can split your application into modules for more scalability</li>
       </ul>
     </article>
   </slide>
 
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>A solid platform</h2>
+      <h3>Now let's look more into the details</h3>
+    </hgroup>
+  </slide>
+
   <slide>
     <hgroup>
-      <h2>Anatomy of a (Python|PHP|Go) web application</h2>
+      <h2>Developing with Google App Engine</h2>
     </hgroup>
     <article>
-      <ul>
-        <li>Project Root
-          <ul>
-            <li><code>app.yaml</code> - App Engine configuration</li>
-            <li>Source code</li>
-            <li>Static files</li>
-          </ul>
-        </li>
-        <li>SDK contains <code>new_project_template</code> and <code>demos</code> directories to help</li>
+      <p>You focus on building awesome web applications, App Engine does the rest</p>
+      <p>Always remember: <a href="https://developers.google.com/appengine">developers.google.com/appengine</a></p>
+      <p>Four easy steps</p>
+      <ul class="build">
+        <li>Step 1: Get the Google App Engine SDK</li>
+        <li>Step 2: Write code</li>
+        <li>Step 3: Test locally</li>
+        <li>Step 4: Deploy to App Engine</li>
       </ul>
+      <p>If you're using Python or PHP, we have a Git push-to-deploy integration to help</p>
     </article>
   </slide>
 
@@ -306,31 +289,94 @@ URL: https://code.google.com/p/io-2012-slides
     <hgroup>
       <h2>Storing data</h2>
     </hgroup>
-    <article>
+    <article class="smaller">
       <ul>
         <li>Datastore
           <ul>
             <li>Schema-less, NoSQL database</li>
-            <li>You define entities with properties</li>
+            <li>Key-value approach</li>
             <li>Max of 1MB per entity</li>
           </ul>
         </li>
         <li>Blobstore
           <ul>
-            <li>Store large amounts of data</li>
+            <li>Store large amounts of data (e.g. images)</li>
           </ul>
         </li>
-        <li>Google Cloud SQL
+        <li>Google Cloud SQL(*)
           <ul>
             <li>MySQL database in the cloud</li>
             <li>Uses the familiar MySql client library approach</li>
           </ul>
         </li>
-        <li>Google Cloud Storage
+        <li>Google Cloud Storage(*)
           <ul>
             <li>Cloud-based file-system</li>
             <li>ACLs</li>
             <li>Resume functionality</li>
+          </ul>
+        </li>
+      </ul>
+      <footer class="source">(*) these have no free quota</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Features of Datastore</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Scalable
+          <ul>
+            <li>constant performance regardless of the amount of data you have</li>
+          </ul>
+        </li>
+        <li>Highly available
+          <ul>
+            <li>distributed and replicated across data centers</li>
+          </ul>
+        </li>
+        <li>Eventual consistency
+          <ul>
+            <li>Relational Databases are always consistent</li>
+            <li>Datastore consistency
+              <ul>
+                <li><code>strong</code> for entity groups (entities with same parent) (with 1 write/sec limit)</li>
+                <li><code>eventual</code> for others</li>
+              </ul>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Thinking about data differently</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Design for eventual consistency</li>
+        <li>Denormalise your data
+          <ul>
+            <li>storage is cheap</li>
+            <li>store a copy of the entity rather than a reference to the entity</li>
+            <li>this helps decrease joins</li>
+          </ul>
+        </li>
+        <li>Entity groups write limit?
+          <ul>
+            <li>Use sharded counters</li>
+            <li>Instead of one entity parent, have many</li>
+            <li>write to entity groups at random - parallelize = speed</li>
+          </ul>
+        </li>
+        <li>Random keys are best (they're easier to distribute)</li>
+        <li>If you can, use idempotent transactions</li>
+          <ul>
+            <li>the same transaction will have the same result if applied many times</li>
+            <li>makes retries easier</li>
           </ul>
         </li>
       </ul>
@@ -357,7 +403,7 @@ URL: https://code.google.com/p/io-2012-slides
           </ul>
         <li>Memcache
           <ul>
-            <li>Store key/value pairs in memory</li>
+            <li>Store key/value pairs in memory for quicker access</li>
             <li>1MB data limit per entry</li>
           </ul>
         </li>
@@ -373,70 +419,53 @@ URL: https://code.google.com/p/io-2012-slides
       <ul>
         <li>Users
           <ul>
-            <li>Authenticate users</li> 
+            <li>Authenticate users</li>
             <li>Use their Google account (incl. Google Apps accounts) or OpenID(*)</li>
           </ul>
         </li>
         <li>Logs
           <ul>
-            <li>Access logs data from your application</li> 
             <li>Request logs - contains data about each HTTP/S request</li>
             <li>Application logs - contains messages you log from your application</li>
           </ul>
         </li>
-      </ul>
-      <footer class="source">The authentication choice is made when you setup the application and cannot be changed later. OpenID support is experimental.</footer>
-    </article>
-  </slide>
-
-  <slide class="segue dark nobackground">
-    <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
-    <hgroup class="auto-fadein">
-      <h2>Test your application locally</h2>
-      <h3>Run your code in a development application server</h3>
-    </hgroup>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Testing your application locally</h2>
-    </hgroup>
-    <article>
-      <ul>
-        <li>SDK: Use <code>dev_appserver.py</code></li>
-        <li>Eclipse: Run or debug as Web Application</li>
-        <li>Management console similar to production</li>
-        <li>Acts like App Engine with small differences
+        <li>Mail
           <ul>
-            <li>Datastore is a local file</li>
-            <li>User service is mocked</li>
-            <li>URL Fetch is from your computer</li>
+            <li>Send mail from your application</li>
+            <li>Receive and process mail with your application</li>
+          </ul>
+        </li>
+        <li>Google Cloud Endpoints
+          <ul>
+            <li>You make an API</li>
+            <li>App Engine SDK creates libraries for Android, iOS, Javascript</li>
           </ul>
         </li>
       </ul>
+      <footer class="source">(*)The authentication choice is made when you setup the application and cannot be changed later. OpenID support is experimental.</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Summary</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>You have a number of database options</li>
+        <li>Datastore scales massively</li>
+        <li>There are loads of really useful services</li>
+        <li>There is free quota and you pay when you exceed that</li>
+      </ul>
     </article>
   </slide>
 
   <slide class="segue dark nobackground">
     <aside class="gdbar"><img src="images/logo-gcdc-small.png"></aside>
     <hgroup class="auto-fadein">
-      <h2>Deploy to App Engine</h2>
-      <h3>It works! Let's go!</h3>
+      <h2>A solid platform</h2>
+      <h3>with great features and capabilities</h3>
     </hgroup>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Deploying to App Engine</h2>
-    </hgroup>
-    <article>
-      <ul>
-        <li>SDK: Use <code>appcfg.py</code></li>
-        <li>Eclipse: Deploy to App Engine</li>
-        <li>The SDK will package your application and update it</li>
-        <li>You'll need to create an App Engine account first and create an Application ID</li>
-      </ul>
-    </article>
   </slide>
 
   <slide>
@@ -462,34 +491,16 @@ URL: https://code.google.com/p/io-2012-slides
 
   <slide>
     <hgroup>
-      <h2>Some pointers</h2>
+      <h2>App Engine performance tuning</h2>
     </hgroup>
-    <article class="smaller">
+    <article>
       <ul>
-        <li>Read fast, write slow
+        <li>Instance cost vs. Latency
           <ul>
-            <li>Use memcache for common data</li>
-            <li>Defer writing of data with Task Queue</li>
-            <li>Think about indexes on your data</li>
-          </ul>
-        </li>
-        <li>De-normalise your data
-          <ul>
-            <li>Decrease the number of join-like queries to Datastore</li>
-            <li>For example, in your entity, use a list of objects for a parent-child relationship</li>
-          </ul>
-        </li>
-        <li>If you're using Java
-          <ul>
-            <li>Use JDO/JPA to make entity persistence simpler</li>
-          </ul>
-        </li>
-        <li>If you can, use Google Cloud Endpoints
-          <ul>
-            <li>Python and Java only</li>
-            <li>Create an API to manage your entities</li>
-            <li>The SDK generates libraries for iOS, Android and Javascript</li>
-            <li>Single API for different consumers</li>
+            <li>As requests increase, App Engine adds instances as needed to control latency</li>
+            <li>It takes time to start an instance</li>
+            <li>This could increase latency</li>
+            <li>You can control the number of idle instances (min, max) but that would cost money</li>
           </ul>
         </li>
       </ul>
@@ -498,19 +509,53 @@ URL: https://code.google.com/p/io-2012-slides
 
   <slide>
     <hgroup>
-      <h2>Summary</h2>
+      <h2>Google infrastructure</h2>
+    </hgroup>
+    <article>
+      <p>Because this is built on Google's infrastructure, these benefits are included</p>
+      <ul>
+        <li>Edge caching</li>
+        <li>Pagespeed</li>
+        <li>DoS protection</li>
+        <li>Image serving infra</li>
+        <li>Fast to other APIs</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reasons to use App Engine for your startup</h2>
     </hgroup>
     <article>
       <ul>
-        <li>Google App Engine is really easy to get started with</li>
-        <li>The documentation is excellent (examples to help you get started)</li>
+        <li>It's built on Google's infrastructure (so it's awesome!)</li>
+        <li>You get a lot included
+          <ul>
+            <li><b>Infrastructure</b> - you focus on your app</li>
+            <li><b>Scalability</b> - from tiny to huge</li>
+            <li><b>Choice</b> - language, data storage, performance</li>
+            <li>A lot of really useful <b>services</b> included</li>
+            <li><b>A free quota</b> for usage, and only pay once you exceed that</li>
+          </ul>
+        </li>
+        <li>It's free to start</li>
+        <li><a href="https://developers.google.com/appengine/sla?hl=en">SLA</a> covering infrastructure, datastore and search of 99.95% in a month</li>
       </ul>
-      <p>Useful links:</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Useful links</h2>
+    </hgroup>
+    <article>
       <ul>
         <li><a href="https://developers.google.com/appengine">The App Engine documentation</a></li>
+        <li><a href="https://developers.google.com/appengine/articles/wordpress">Installing WordPress on App Engine</a></li>
         <li><a href="http://danpresos.appspot.com/AppEngine101/index.html">A guide for App Engine Java</a></li>
         <li><a href="http://danpresos.appspot.com/AppEnginePHP/index.html">A quickstart guide for App Engine PHP</a></li>
-        <li><a href="http://danpresos.appspot.com/IntroToAppEngine/index.html">These slides</a></li>
+        <li><a href="http://danpresos.appspot.com/AppEngineForStartups/index.html">These slides</a></li>
       </ul>
     </article>
   </slide>
