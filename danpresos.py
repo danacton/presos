@@ -25,7 +25,7 @@ MAIN_PAGE_HTML = """\
       <li><b><a href="/AppEngine201/index.html">Google App Engine 201</a></b> (<a href="https://developers.google.com/groups/chapter/106505752730493822675/">Wits Google Developer Group</a>, August 2013)</li>
       <li><b><a href="/HTML5CssResponsive/index.html">HTML5, CSS3 and Responsive Design</a></b> (<a href="http://www.google.com/events/gcdc2013/">Google Cloud Developer Challenge</a>, September 2013)</li>
       <li><b><a href="/IntroToAppEngine/index.html">Introduction to App Engine</a></b> (<a href="http://www.google.com/events/gcdc2013/">Google Cloud Developer Challenge</a>, September 2013)</li>
-      <li><b><a href="/AppEnginePHP/index.html">A quick start guid to PHP on App Engine</a></b> (<a href="http://www.google.com/events/gcdc2013/">Google Cloud Developer Challenge</a>, September 2013)</li>
+      <li><b><a href="/AppEnginePHP/index.html">A quick start guide to PHP on App Engine</a></b> (<a href="http://www.google.com/events/gcdc2013/">Google Cloud Developer Challenge</a>, September 2013)</li>
       <li><b><a href="/AppEngineForStartups/index.html">App Engine for startups</a></b> (<a href="http://www.88mph.ac/">88mph</a> Nairobi Startup Bootcamp, October 2013)</li>
   </body>
 </html>
